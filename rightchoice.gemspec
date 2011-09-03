@@ -1,0 +1,31 @@
+# -*- encoding: utf-8 -*-
+$:.push File.expand_path("../lib", __FILE__)
+require "rightchoice/version"
+
+Gem::Specification.new do |s|
+  s.name        = "rightchoice"
+  s.version     = Rightchoice::VERSION
+  s.platform    = Gem::Platform::RUBY
+  s.homepage    = "http://github.com/yuki24/rightchoice"
+  s.license     = "MIT"
+  s.summary     = "always make the right choice!"
+  s.description = "rightchoice makes it easier to do a/b testing and multivariate testing. it comes with a beautiful front-end interface."
+  s.email       = "mail@yukinishijima.net"
+  s.authors     = ["Yuki Nishijima"]
+
+  s.rubyforge_project = "rightchoice"
+
+  s.files            = `git ls-files`.split("\n")
+  s.test_files       = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.extra_rdoc_files = ['README.rdoc']
+  s.require_paths    = ["lib"]
+
+  s.add_dependency 'redis'
+  s.add_dependency 'redis-namespace'
+  s.add_dependency 'sinatra'
+
+  s.add_development_dependency 'bundler',     '~> 1.0'
+  s.add_development_dependency 'rspec',       '~> 2.6'
+  s.add_development_dependency 'rack-test',   '~> 0.6'
+  s.add_development_dependency 'guard-rspec', '~> 0.4'
+end
