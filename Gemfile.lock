@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rightchoice (0.0.1)
+    rightchoice (0.1.0)
       redis
       redis-namespace
       sinatra
