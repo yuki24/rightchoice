@@ -8,14 +8,20 @@
 
 </head>
 <body>
-  <div class="header"></div>
+  <div class="container">
+    <div class="page-header">
+      <h1>Rightchoice Dashboard</h1>
+    </div>
 
-  <div id="main">
-    <%= yield %>
-  </div>
+    <div id="main">
+      <%= yield %>
+    </div>
 
-  <div id="footer">
-    <p>Powered by <a href="http://github.com/andrew/split">Split</a> v<%=Split::VERSION %></p>
+    <div class="form-stacked">
+      <div id="footer" class="actions">
+        <p>Powered by <a href="http://github.com/andrew/split">Split</a> v<%=Split::VERSION %></p>
+      </div>
+    </div>
   </div>
 </body>
 </html>
