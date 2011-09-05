@@ -1,4 +1,5 @@
 require 'redis/namespace'
+require 'rightchoice/dashboard'
 require 'rightchoice/models/track'
 require 'rightchoice/models/alternative'
 require 'rightchoice/helpers/abtest_helper'
