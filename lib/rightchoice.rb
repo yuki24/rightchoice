@@ -32,7 +32,7 @@ module Rightchoice
     when Redis::Namespace
       @redis = server
     else
-      @redis = Redis::Namespace.new(:resque, :redis => server)
+      @redis = Redis::Namespace.new(:split, :redis => server)
     end
   end
 
