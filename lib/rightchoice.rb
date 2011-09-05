@@ -1,5 +1,6 @@
 require 'redis/namespace'
 require 'rightchoice/models/track'
+require 'rightchoice/helpers/abtest_helper'
 
 module Rightchoice
   extend self
