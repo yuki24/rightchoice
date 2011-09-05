@@ -1,4 +1,5 @@
 require 'redis/namespace'
+require 'rightchoice/models/track'
 
 module Rightchoice
   extend self
