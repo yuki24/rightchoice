@@ -24,8 +24,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'redis-namespace'
   s.add_dependency 'sinatra'
 
-  s.add_development_dependency 'bundler',     '~> 1.0'
-  s.add_development_dependency 'rspec',       '~> 2.6'
-  s.add_development_dependency 'rack-test',   '~> 0.6'
-  s.add_development_dependency 'guard-rspec', '~> 0.4'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'ruby-debug19'
 end
