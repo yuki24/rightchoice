@@ -7,7 +7,7 @@ describe Rightchoice do
 
   it "can set a namespace through a url-like string" do
     Rightchoice.redis.should be_true
-    Rightchoice.redis.namespace.should == :resque
+    Rightchoice.redis.namespace.should == :rightchoice
     Rightchoice.redis = 'localhost:6379/namespace'
     Rightchoice.redis.namespace.should == 'namespace'
   end

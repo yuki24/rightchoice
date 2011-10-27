@@ -25,13 +25,13 @@ module Rightchoice
         redis = Redis.new(:host => host, :port => port,
           :thread_safe => true, :db => db)
       end
-      namespace ||= :split
+      namespace ||= :rightchoice
 
       @redis = Redis::Namespace.new(namespace, :redis => redis)
     when Redis::Namespace
       @redis = server
     else
-      @redis = Redis::Namespace.new(:split, :redis => server)
+      @redis = Redis::Namespace.new(:rightchoice, :redis => server)
     end
   end
 
