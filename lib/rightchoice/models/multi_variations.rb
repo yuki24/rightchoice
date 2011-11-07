@@ -76,7 +76,6 @@ module Rightchoice
           .new(:available => available,
                :paricipants_count => participants_count,
                :votes_count => votes_count,).tap do |v|
-#          v.
         end
       end
     end
