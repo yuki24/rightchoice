@@ -50,6 +50,20 @@ describe Rightchoice::MultiVariations do
     its(:confident?) { should be_true }
   end
 
+  describe 'availability check' do
+    context "for available variations" do
+      subject { @multi_variation }
+      its(:available?) { should be_true }
+    end
+
+    context "for unavailable variations" do
+      before { @multi_variation.disable! }
+
+      subject { @multi_variation }
+      its(:available?) { should be_false }
+    end
+  end
+
 =begin
   describe 'deletion' do
     before :all do

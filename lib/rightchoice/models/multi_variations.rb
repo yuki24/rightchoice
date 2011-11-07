@@ -61,8 +61,8 @@ module Rightchoice
       end
     end
 
-    def disable(testname, combinations)
-      redis.hmset(redis_key, :available, false) if redis.exists(redis_key)
+    def disable!
+      redis.hmset(redis_key, :available, false)
     end
 
     def destroy
@@ -79,6 +79,10 @@ module Rightchoice
 #          v.
         end
       end
+    end
+
+    def available?
+      redis.exists(redis_key) ? (redis.hget(redis_key, "available") == "true") : true
     end
 
     def self.available?(testname, combination)
