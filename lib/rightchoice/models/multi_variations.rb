@@ -40,7 +40,7 @@ module Rightchoice
 
     def save
       if !redis.exists(redis_key)
-        redis.hmset(redis_key,
+        redis.mapped_hmset(redis_key,
                     :available => @available,
                     :participants_count => @participants_count,
                     :votes_count => @votes_count)
