@@ -1,6 +1,6 @@
 = rightchoice
 
-Description goes here.
+Rightchoice makes it easy to have multivariate testing. You can have AB testing as well.
 
 == Contributing to rightchoice
  
