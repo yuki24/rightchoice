@@ -1,8 +1,8 @@
 require 'redis/namespace'
-require 'rightchoice/dashboard'
+#require 'rightchoice/dashboard'
 require 'rightchoice/models/variation'
 require 'rightchoice/models/multi_variations'
-require 'rightchoice/helpers/abtest_helper'
+require 'rightchoice/view_helper'
 
 module Rightchoice
   extend self
