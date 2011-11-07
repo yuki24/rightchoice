@@ -82,7 +82,7 @@ module Rightchoice
 
     def self.available?(testname, combination)
       if exists?(testname, combination)
-        Rightchoice.redis.hget("#{testname}.#{combination}", "available") == "true"
+        redis.hget("#{testname}.#{combination}", "available") == "true"
       else
         # return false or raise error?
       end
@@ -97,7 +97,7 @@ module Rightchoice
     end
 
     def self.exists?(testname, combination)
-      Rightchoice.redis.exists("#{testname}.#{combination}")
+      redis.exists("#{testname}.#{combination}")
     end
 
     private
