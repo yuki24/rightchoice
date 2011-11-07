@@ -30,8 +30,8 @@ module Rightchoice
     end
 
     def redis_key
-      combinations = selections.to_a.map{|a| a.join(":") }.join(".")
-      "#{name}.#{combinations}"
+      @combinations ||= selections.to_a.map{|a| a.join(":") }.join(".")
+      "#{name}.#{@combinations}"
     end
 
     def confident?
