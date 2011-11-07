@@ -4,7 +4,7 @@ module Rightchoice
 
     def initialize(multivariate_name, options={})
       @multivariate_name = multivariate_name.to_s
-      @variations = []
+      @variations = Rightchoice::VariationList.new
       @selections = {}
       @available = true
       @participants_count = (options[:participants_count] || 0)
@@ -118,6 +118,17 @@ module Rightchoice
     #  => {"variation1" => "foo", "variation2" => "hoge"}
     def self.selections_by_key!(redis_key)
       Hash[*redis_key.tr(".",":").split(":")[1..-1]]
+    end
+  end
+
+  class VariationList < Array
+    def <<(variation)
+      self.empty? ? variation.root! : self.last.child = variation
+      super(variation)
+    end
+
+    def find(variation_name)
+      self.detect { |v| v.name == variation_name.to_s }
     end
   end
 end

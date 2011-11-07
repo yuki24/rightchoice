@@ -20,14 +20,23 @@ describe Rightchoice::MultiVariations do
   end
 
   describe "addition of variates and selection" do
+    before do
+      @variation1 = Rightchoice::Variation.new(:variation_name1, "foo", "bar", :choice => "foo")
+      @variation2 = Rightchoice::Variation.new(:variation_name2, "hoge", "fuga", :choice => "hoge")
+    end
+
     it "should have 1 variation" do
-      @multi_variation.variations << Rightchoice::Variation.new(:variation_name1, "foo", "bar", :choice => "foo")
+
+      @multi_variation.variations << @variation1
       @multi_variation.variations.count.should be 1
+      @multi_variation.variations.find(:variation_name1).should == @variation1
+      @multi_variation.variations.find(:variation_name2).should be_nil
     end
 
     it "should have 2 variations" do
-      @multi_variation.variations << Rightchoice::Variation.new(:variation_name2, "hoge", "fuga", :choice => "hoge")
+      @multi_variation.variations << @variation2
       @multi_variation.variations.count.should be 2
+      @multi_variation.variations.find(:variation_name2).should == @variation2
     end
   end
 
