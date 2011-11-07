@@ -41,7 +41,7 @@ module Rightchoice
       if !redis.exists(redis_key)
         redis.hmset(redis_key,
                     :available => @available,
-                    :paricipants_count => @participants_count,
+                    :participants_count => @participants_count,
                     :votes_count => @votes_count)
       end
     end
