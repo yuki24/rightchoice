@@ -38,7 +38,7 @@ module Rightchoice
     end
 
     def save
-      if redis.exists?(redis_key)
+      if !redis.exists(redis_key)
         redis.hmset(redis_key,
                     :available => @available,
                     :paricipants_count => @participants_count,
@@ -61,7 +61,7 @@ module Rightchoice
     end
 
     def disable(testname, combinations)
-      redis.hmset(redis_key, :available, false) if redis.exists?(redis_key)
+      redis.hmset(redis_key, :available, false) if redis.exists(redis_key)
     end
 
     def destroy
@@ -90,14 +90,14 @@ module Rightchoice
 
     def self.vote!(testname, combination)
       if available?(testname, combination)
-        Rightchoice.redis.hincrby("#{testname}.#{combination}", :votes_count, 1)
+        redis.hincrby("#{testname}.#{combination}", :votes_count, 1)
       else
         # raise CombinationNotFound, "The combination doesn't exist."
       end
     end
 
     def self.exists?(testname, combination)
-      Rightchoice.redis.exists?("#{testname}.#{combination}")
+      Rightchoice.redis.exists("#{testname}.#{combination}")
     end
 
     private
