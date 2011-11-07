@@ -37,6 +37,19 @@ describe Rightchoice::MultiVariations do
     its(:redis_key) { should == "test_name.variation_name1:foo.variation_name2:hoge" }
   end
 
+  context "statistical numbers" do
+    before :all do
+      @multi_variation.save
+      1000.times { @multi_variation.participate! }
+      100.times { @multi_variation.vote! }
+    end
+
+    subject { @multi_variation }
+    its(:expectation) { should == 100 }
+    its(:dispersion) { should == 90 }
+    its(:confident?) { should be_true }
+  end
+
 =begin
   describe 'deletion' do
     before :all do

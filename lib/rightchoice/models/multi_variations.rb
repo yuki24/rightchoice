@@ -46,8 +46,18 @@ module Rightchoice
       end
     end
 
+    def participate!
+      if redis.exists(redis_key)
+        redis.hincrby(redis_key, :participants_count, 1)
+        @participants_count = @participants_count + 1
+      end
+    end
+
     def vote!
-      redis.hincrby(redis_key, :votes_count, 1) if redis.exists?(redis_key)
+      if redis.exists(redis_key)
+        redis.hincrby(redis_key, :votes_count, 1)
+        @votes_count = @votes_count + 1
+      end
     end
 
     def disable(testname, combinations)
