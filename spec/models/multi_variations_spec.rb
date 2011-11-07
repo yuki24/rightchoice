@@ -26,7 +26,6 @@ describe Rightchoice::MultiVariations do
     end
 
     it "should have 1 variation" do
-
       @multi_variation.variations << @variation1
       @multi_variation.variations.count.should be 1
       @multi_variation.variations.find(:variation_name1).should == @variation1
