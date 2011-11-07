@@ -6,6 +6,7 @@ module Rightchoice
       @multivariate_name = multivariate_name.to_s
       @variations = []
       @selections = {}
+      @available = true
       @participants_count = (options[:participants_count] || 0)
       @votes_count = (options[:votes_count] || 0)
     end
