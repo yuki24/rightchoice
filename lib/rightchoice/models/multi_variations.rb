@@ -20,10 +20,12 @@ module Rightchoice
       end
     end
 
-    def expectation()
+    def expectation
+      @votes_count
     end
 
     def dispersion
+      (expectation * (1 - (@votes_count.to_f / @participants_count))) if @participants_count != 0
     end
 
     def redis_key
@@ -32,6 +34,7 @@ module Rightchoice
     end
 
     def confident?
+      (expectation > 5) && (dispersion > 5)
     end
 
     def save
