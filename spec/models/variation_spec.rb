@@ -42,7 +42,7 @@ describe Rightchoice::Variation do
       end
 
       it "should create a new multi_variations object" do
-        Rightchoice::Variation.redis.hexists("all_tests", "new_testname").should be_false
+        Rightchoice::Variation.redis.hexists("all_tests", "new_test").should be_false
         Rightchoice::Variation.find_or_create(:new_test, "foo", "bar")
         Rightchoice::Variation.redis.hexists("all_tests", "new_test").should be_true
         Rightchoice::Variation.redis.hget("all_tests", "new_test").should ==
