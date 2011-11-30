@@ -104,7 +104,16 @@ module Rightchoice
       redis.exists("#{testname}.#{combination}")
     end
 
+    def self.find_or_create(testname)
+      redis.hset("all_mvtests", testname.to_s, "[]") unless redis.hexists("all_mvtests", testname.to_s)
+      new(testname.to_s)
+    end
+
     private
+
+    def self.redis
+      @@_redis ||= Rightchoice.redis
+    end
 
     def redis
       @_redis ||= Rightchoice.redis

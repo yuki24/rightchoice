@@ -10,6 +10,7 @@ module Rightchoice
 
       if options
         @choice = @alternatives.detect{|name| name == options[:choice] }
+        redis.hset("all_tests", variation_name.to_s, @alternatives.to_json) if options[:persist] == true
       end
     end
 
@@ -63,7 +64,25 @@ module Rightchoice
       @_end == true
     end
 
+    class << self
+      def find_or_create(variation_name, *alternatives)
+        unless redis.hexists("all_tests", variation_name.to_s)
+          new(variation_name, *alternatives, :persist => true)
+        else
+          new(variation_name, *alternatives)
+        end
+      end
+    end
+
     private
+
+    def self.redis
+      @@_redis ||= Rightchoice.redis
+    end
+
+    def redis
+      @_redis ||= Rightchoice.redis
+    end
 
     def random_select
       alternatives.sample

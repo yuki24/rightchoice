@@ -5,7 +5,7 @@ describe Rightchoice::MultiVariations do
   before(:each) { Rightchoice.redis.flushall }
 
   before :all do
-    @multi_variation = Rightchoice::MultiVariations.new(:test_name)
+    @multi_variation = Rightchoice::MultiVariations.find_or_create(:test_name)
   end
 
   describe "initialization" do
@@ -16,6 +16,23 @@ describe Rightchoice::MultiVariations do
 
     it "should not have any variations" do
       @multi_variation.variations.count.should be 0
+    end
+
+    describe "#find_or_create" do
+      it "should create a new multi_variations object" do
+        Rightchoice::MultiVariations.find_or_create(:test_name)
+        Rightchoice::MultiVariations.redis.hexists("all_mvtests", "test_name").should be_true
+
+        expect {
+          mv = Rightchoice::MultiVariations.find_or_create(:test_name)
+        }.to change{ Rightchoice::MultiVariations.redis.hlen("all_mvtests") }.by(0)
+      end
+
+      it "should create a new multi_variations object" do
+        Rightchoice::MultiVariations.redis.hexists("all_mvtests", "new_testname").should be_false
+        Rightchoice::MultiVariations.find_or_create("new_testname")
+        Rightchoice::MultiVariations.redis.hexists("all_mvtests", "new_testname").should be_true
+      end
     end
   end
 

@@ -28,6 +28,27 @@ describe Rightchoice::Variation do
       its(:alternatives) { should == ["foo", "bar"] }
       its(:choice) { should_not == "" }
     end
+
+    describe "#find_or_create" do
+      it "should create a new variation object" do
+        Rightchoice::Variation.find_or_create(:test_name, "foo", "bar")
+        Rightchoice::Variation.redis.hexists("all_tests", "test_name").should be_true
+
+        expect {
+          mv = Rightchoice::Variation.find_or_create(:test_name)
+        }.to change{ Rightchoice::Variation.redis.hlen("all_tests") }.by(0)
+        Rightchoice::Variation.redis.hget("all_tests", "test_name").should ==
+          ["foo", "bar"].to_json
+      end
+
+      it "should create a new multi_variations object" do
+        Rightchoice::Variation.redis.hexists("all_tests", "new_testname").should be_false
+        Rightchoice::Variation.find_or_create(:new_test, "foo", "bar")
+        Rightchoice::Variation.redis.hexists("all_tests", "new_test").should be_true
+        Rightchoice::Variation.redis.hget("all_tests", "new_test").should ==
+          ["foo", "bar"].to_json
+      end
+    end
   end
 
   describe "listing" do
