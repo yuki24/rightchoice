@@ -5,9 +5,9 @@ describe Rightchoice::Variation do
 
   describe "initialization" do
     before :all do
-      @variation = Rightchoice::Variation.new(:test_name, "foo", "bar")
-      @valid_variation = Rightchoice::Variation.new(:test_name, "foo", "bar", :choice => "foo")
-      @invalid_variation = Rightchoice::Variation.new(:test_name, "foo", "bar", :choice => "")
+      @variation = Rightchoice::Variation.find_or_create(:test_name, "foo", "bar")
+      @valid_variation = Rightchoice::Variation.find_or_create(:test_name, "foo", "bar", :choice => "foo")
+      @invalid_variation = Rightchoice::Variation.find_or_create(:test_name, "foo", "bar", :choice => "")
     end
 
     context 'default params' do
@@ -53,10 +53,10 @@ describe Rightchoice::Variation do
 
   describe "listing" do
     before :all do
-      @v1 = Rightchoice::Variation.new(:name1, "foo", "bar")
-      @v2 = Rightchoice::Variation.new(:name2, "foo", "bar")
-      @v3 = Rightchoice::Variation.new(:name3, "foo", "bar")
-      @v4 = Rightchoice::Variation.new(:name4, "foo", "bar")
+      @v1 = Rightchoice::Variation.find_or_create(:name1, "foo", "bar")
+      @v2 = Rightchoice::Variation.find_or_create(:name2, "foo", "bar")
+      @v3 = Rightchoice::Variation.find_or_create(:name3, "foo", "bar")
+      @v4 = Rightchoice::Variation.find_or_create(:name4, "foo", "bar")
     end
 
     it "should set v2 as a child to v1" do
