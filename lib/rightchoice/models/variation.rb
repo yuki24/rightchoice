@@ -9,7 +9,7 @@ module Rightchoice
       @alternatives = alternatives
 
       if options
-        @choice = @alternatives.detect{|name| name == options[:choice] }
+        @choice = @alternatives.detect{|name| name == options[:choice] } if options[:choice]
         redis.hset("all_tests", variation_name.to_s, @alternatives.to_json) if options[:persist] == true
       end
     end
@@ -67,7 +67,8 @@ module Rightchoice
     class << self
       def find_or_create(variation_name, *alternatives)
         unless redis.hexists("all_tests", variation_name.to_s)
-          new(variation_name, *alternatives, :persist => true)
+          options = (alternatives.last.is_a?(Hash) ? alternatives.pop : {})
+          new(variation_name, *alternatives, options.merge(:persist => true))
         else
           new(variation_name, *alternatives)
         end
