@@ -117,11 +117,11 @@ module Rightchoice
     private
 
     def self.redis
-      @@_redis ||= Rightchoice.redis
+      Rightchoice.redis
     end
 
     def redis
-      @_redis ||= Rightchoice.redis
+      Rightchoice.redis
     end
 
     def self.variations_by_selections!(selections)

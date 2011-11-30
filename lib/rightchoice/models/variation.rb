@@ -77,11 +77,11 @@ module Rightchoice
     private
 
     def self.redis
-      @@_redis ||= Rightchoice.redis
+      Rightchoice.redis
     end
 
     def redis
-      @_redis ||= Rightchoice.redis
+      Rightchoice.redis
     end
 
     def random_select
