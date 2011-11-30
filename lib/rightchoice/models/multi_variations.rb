@@ -5,6 +5,7 @@ module Rightchoice
     def initialize(multivariate_name, options={})
       @multivariate_name = multivariate_name.to_s
       @variations = Rightchoice::VariationList.new
+      @variations.mvtest = self
       @selections = {}
       @available = true
       @participants_count = (options[:participants_count] || 0)
@@ -109,6 +110,10 @@ module Rightchoice
       new(testname.to_s)
     end
 
+    def update_variations!
+      redis.hset("all_mvtests", name, @variations.map(&:name).to_json)
+    end
+
     private
 
     def self.redis
@@ -131,9 +136,12 @@ module Rightchoice
   end
 
   class VariationList < Array
+    attr_accessor :mvtest
+
     def <<(variation)
       self.empty? ? variation.root! : self.last.child = variation
-      super(variation)
+      super(variation) and mvtest.update_variations!
+      variation
     end
 
     def find(variation_name)

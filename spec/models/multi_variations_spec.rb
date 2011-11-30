@@ -38,21 +38,30 @@ describe Rightchoice::MultiVariations do
 
   describe "addition of variates and selection" do
     before do
-      @variation1 = Rightchoice::Variation.new(:variation_name1, "foo", "bar", :choice => "foo")
-      @variation2 = Rightchoice::Variation.new(:variation_name2, "hoge", "fuga", :choice => "hoge")
+      Rightchoice::MultiVariations.find_or_create(:test_name)
+      @variation1 = Rightchoice::Variation.find_or_create(:variation_name1, "foo", "bar", :choice => "foo")
+      @variation2 = Rightchoice::Variation.find_or_create(:variation_name2, "hoge", "fuga", :choice => "hoge")
     end
 
     it "should have 1 variation" do
-      @multi_variation.variations << @variation1
-      @multi_variation.variations.count.should be 1
-      @multi_variation.variations.find(:variation_name1).should == @variation1
-      @multi_variation.variations.find(:variation_name2).should be_nil
+      expect {
+        @multi_variation.variations << @variation1
+        @multi_variation.variations.count.should be 1
+        @multi_variation.variations.find(:variation_name1).should == @variation1
+        @multi_variation.variations.find(:variation_name2).should be_nil
+      }.to change {
+        Rightchoice::MultiVariations.redis.hget("all_mvtests", "test_name")
+      }.from([].to_json).to(["variation_name1"].to_json)
     end
 
     it "should have 2 variations" do
-      @multi_variation.variations << @variation2
-      @multi_variation.variations.count.should be 2
-      @multi_variation.variations.find(:variation_name2).should == @variation2
+      expect {
+        @multi_variation.variations << @variation2
+        @multi_variation.variations.count.should be 2
+        @multi_variation.variations.find(:variation_name2).should == @variation2
+      }.to change {
+        Rightchoice::MultiVariations.redis.hget("all_mvtests", "test_name")
+      }.from([].to_json).to(["variation_name1", "variation_name2"].to_json)
     end
   end
 
