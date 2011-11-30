@@ -1,9 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Rightchoice do
-  before do
-    Rightchoice.redis.flushall
-  end
+  before { Rightchoice.redis.flushall }
 
   it "can set a namespace through a url-like string" do
     Rightchoice.redis.should be_true
