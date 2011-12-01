@@ -21,6 +21,14 @@ module Rightchoice
       leafs.map{|l| l.participants_count }.max
     end
 
+    def disable_ineffective_nodes!
+      leafs = sorted_leafs
+      best_choice = leafs.pop
+      leafs.each do |l|
+        l.disable! if l.confidence_interval.last < best_choice.confidence_interval.first
+      end
+    end
+
     def build_tree!
       @variations.each do |variation|
         leafs.each do |leaf|
@@ -34,6 +42,14 @@ module Rightchoice
     def leafs
       [].tap do |leafs|
         @root_node.each_leaf{|leaf| leafs << leaf }
+      end
+    end
+
+    private
+
+    def sorted_leafs
+      leafs.clone.tap do |ls|
+        ls.sort! {|a,b| a.probability <=> b.probability }
       end
     end
   end

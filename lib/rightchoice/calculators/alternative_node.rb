@@ -34,6 +34,10 @@ module Rightchoice
       (expectation > 5) && (dispersion > 5)
     end
 
+    def disable!
+      redis.exists(redis_key) ? redis.hmset(redis_key, :available, false) : nil
+    end
+
     def redis_key
       if self.is_leaf?
         @redis_key ||=

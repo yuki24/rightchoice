@@ -60,6 +60,15 @@ describe Rightchoice::AlternativeNode do
       its(:probability) { should == 0.1 }
       its(:confidence_interval) { should == (0.08140580735820993..0.11859419264179008) }
       its(:confident?) { should be_true }
+      its(:available?) { should be_true }
+    end
+
+    describe "availability" do
+      it "should disable its node" do
+        calc.root_node["foo"]["hoge"].available?.should be_true
+        calc.root_node["foo"]["hoge"].disable!
+        calc.root_node["foo"]["hoge"].available?.should be_false
+      end
     end
   end
 end
