@@ -10,8 +10,8 @@ module Rightchoice
       # @mv_test.variations
       # @mv_test.variations.first.alternatives
       @variations = JSON(Rightchoice.redis.hget("all_mvtests", multivariate_test))
-      @variations = @variations.map do |variation|
-        Variation.new(variation, *JSON(Rightchoice.redis.hget("all_tests", variation)))
+      @variations = @variations.map do |variation_name|
+        Variation.new(variation_name, *JSON(Rightchoice.redis.hget("all_tests", variation_name)))
       end
       @root_node = AlternativeNode.new(multivariate_test, "Root")
       build_tree!
