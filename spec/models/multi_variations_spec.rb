@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rightchoice/models/multi_variations'
 
 describe Rightchoice::MultiVariations do
-  before(:each) { Rightchoice.redis.flushall }
+  before(:all) { Rightchoice.redis.flushall }
 
   before :all do
     @multi_variation = Rightchoice::MultiVariations.find_or_create(:test_name)
@@ -61,7 +61,7 @@ describe Rightchoice::MultiVariations do
         @multi_variation.variations.find(:variation_name2).should == @variation2
       }.to change {
         Rightchoice::MultiVariations.redis.hget("all_mvtests", "test_name")
-      }.from([].to_json).to(["variation_name1", "variation_name2"].to_json)
+      }.from(["variation_name1"].to_json).to(["variation_name1", "variation_name2"].to_json)
     end
   end
 
