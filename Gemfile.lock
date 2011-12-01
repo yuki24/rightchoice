@@ -5,6 +5,7 @@ PATH
       json
       redis
       redis-namespace
+      rubytree
       sinatra
 
 GEM
@@ -40,6 +41,7 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
+    rubytree (0.8.1)
     sinatra (1.3.1)
       rack (~> 1.3, >= 1.3.4)
       rack-protection (~> 1.1, >= 1.1.2)
