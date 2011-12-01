@@ -28,6 +28,7 @@
       <% end %>
       <th>Participants Count</th>
       <th>Voting Count</th>
+      <th>Probability</th>
       <th>Confident?</th>
       <th>Availability</th>
     </tr>
@@ -43,6 +44,7 @@
         <% end %>
         <td><%= leaf.participants_count %></td>
         <td><%= leaf.votes_count %></td>
+        <td><%= (leaf.probability * 100).round(2) %> %</td>
         <td><%= leaf.confident? %></td>
         <td><%= leaf.available? %></td>
       </tr>
