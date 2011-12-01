@@ -18,14 +18,11 @@ module Rightchoice
     end
 
     def max_participants
-      leafs = [] and @root_node.each_leaf{|leaf| leafs << leaf }
       leafs.map{|l| l.participants_count }.max
     end
 
     def build_tree!
       @variations.each do |variation|
-        leafs = [] and @root_node.each_leaf{|leaf| leafs << leaf }
-
         leafs.each do |leaf|
           variation.alternatives.each do |alternative|
             leaf << AlternativeNode.new(alternative, variation.name)
@@ -34,5 +31,10 @@ module Rightchoice
       end
     end
 
+    def leafs
+      [].tap do |leafs|
+        @root_node.each_leaf{|leaf| leafs << leaf }
+      end
+    end
   end
 end
