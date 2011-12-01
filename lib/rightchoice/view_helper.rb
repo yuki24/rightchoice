@@ -5,7 +5,7 @@ module Rightchoice
       if participated_before?(test_name)
         choice = multivariate_test(test_name).variations.find(variation_name).choice
       else
-        variation = Rightchoice::Variation.new(variation_name, *alternatives)
+        variation = Rightchoice::Variation.find_or_create(variation_name, *alternatives)
         multivariate_test(test_name).variations << variation
         choice = variation.choice
       end
@@ -29,7 +29,7 @@ module Rightchoice
     end
 
     def multivariate_test(name)
-      multivariate_tests[name] ||= Rightchoice::MultiVariations.new(name)
+      multivariate_tests[name] ||= Rightchoice::MultiVariations.find_or_create(name)
     end
 
     def multivariate_tests
