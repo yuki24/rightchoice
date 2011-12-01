@@ -17,6 +17,15 @@ module Rightchoice
       (expectation * (1 - (votes_count.to_f / participants_count))) if participants_count != 0
     end
 
+    def probability
+      votes_count.to_f / participants_count
+    end
+
+    def confidence_interval
+      p = probability
+      (p-(1.96 * Math.sqrt((p*(1-p)) / participants_count)))..(p+(1.96 * Math.sqrt((p*(1-p)) / participants_count)))
+    end
+
     def available?
       redis.exists(redis_key) ? (redis.hget(redis_key, "available") == "true") : nil
     end
