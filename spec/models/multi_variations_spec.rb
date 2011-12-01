@@ -98,4 +98,19 @@ describe Rightchoice::MultiVariations do
     end
   end
 
+  describe "finders" do
+    before :all do
+      Rightchoice.redis.flushall
+      100.times{|i| Rightchoice::MultiVariations.find_or_create("test#{i}") }
+    end
+
+    let(:tests){ Rightchoice::MultiVariations.all }
+
+    it "should return 100 multivariate tests" do
+      tests.count.should == 100
+      tests.first.class.should == String
+      tests.first.should == "test0"
+    end
+  end
+
 end

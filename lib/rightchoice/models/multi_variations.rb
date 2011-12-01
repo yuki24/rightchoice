@@ -98,6 +98,10 @@ module Rightchoice
       new(testname.to_s)
     end
 
+    def self.all
+      redis.hkeys("all_mvtests")
+    end
+
     def update_variations!
       redis.hset("all_mvtests", name, @variations.map(&:name).to_json)
     end
