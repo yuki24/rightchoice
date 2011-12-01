@@ -69,18 +69,6 @@ module Rightchoice
     def destroy
     end
 
-    def self.find_by_testname_and_key(testname, redis_key)
-      if exists?(testname, redis_key)
-        # get the values @available, @participants_count, @votes_count from redis
-
-        Rightchoice::MultiVariations
-          .new(:available => available,
-               :paricipants_count => participants_count,
-               :votes_count => votes_count,).tap do |v|
-        end
-      end
-    end
-
     def available?
       redis.exists(redis_key) ? (redis.hget(redis_key, "available") == "true") : true
     end
