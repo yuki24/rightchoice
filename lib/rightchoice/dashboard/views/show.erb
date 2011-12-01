@@ -27,6 +27,7 @@
       <th>Participants Count</th>
       <th>Voting Count</th>
       <th>Confident?</th>
+      <th>Availability</th>
     </tr>
   </thead>
   <tbody>
@@ -41,6 +42,7 @@
         <td><%= leaf.participants_count %></td>
         <td><%= leaf.votes_count %></td>
         <td><%= leaf.confident? %></td>
+        <td><%= leaf.available? %></td>
       </tr>
     <% end %>
   </tbody>
