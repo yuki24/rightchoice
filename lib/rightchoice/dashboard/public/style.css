@@ -1,0 +1,11 @@
+body {
+  padding-top: 50px;
+}
+
+.container {
+  width: 900px;
+}
+
+footer.actions {
+  padding: 17px 20px 18px 20px;
+}

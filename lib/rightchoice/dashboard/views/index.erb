@@ -1,0 +1,19 @@
+<% @multi_variations.each do |test| %>
+  <h2><a href="/<%= test %>"><%= test %></a></h2>
+  <table class="zebra-striped">
+    <thead>
+      <tr>
+        <th>Variation Name</th>
+        <th>Alternatives</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% JSON(Rightchoice.redis.hget("all_mvtests", test)).each do |variation| %>
+        <tr>
+          <td><%= variation %></td>
+          <td><%= Rightchoice.redis.hget("all_tests", variation) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

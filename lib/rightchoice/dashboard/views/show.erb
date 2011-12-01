@@ -1,0 +1,84 @@
+<h2><%= params[:multivariate_test] %></h2>
+
+<table class="zebra-striped">
+  <thead>
+    <tr>
+      <th>Variation Name</th>
+      <th>Alternatives</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @calculator.variations.each do |variation| %>
+      <tr>
+        <td><%= variation.name %></td>
+        <td><%= variation.alternatives %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="zebra-striped">
+  <thead>
+    <tr>
+      <th>No</th>
+      <% @calculator.variations.reverse.each do |variation| %>
+        <th><%= variation.name %></th>
+      <% end %>
+      <th>Participants Count</th>
+      <th>Voting Count</th>
+      <th>Confident?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @calculator.leafs.each_with_index do |leaf, index| %>
+      <tr>
+        <td><%= index+1 %></td>
+        <% target_node = leaf %>
+        <% while(target_node.parent) do %>
+          <td><%= target_node.name %></td>
+          <% target_node = target_node.parent %>
+        <% end %>
+        <td><%= leaf.participants_count %></td>
+        <td><%= leaf.votes_count %></td>
+        <td><%= leaf.confident? %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div id="graph_div" style="margin: 20px auto; width:900px; height:300px;"></div>
+<script type="text/javascript">
+  function fn(x) {
+    return [<% @calculator.root_node.each_leaf do |leaf| %>
+      <%= "#{equation_for_graph(leaf.expectation, leaf.dispersion)}," if leaf.available? %>
+    <% end %>];
+
+  }
+
+  function plot() {
+    var graph = document.getElementById("graph_div");
+    var width = parseInt(graph.style.width);
+    var x1 = 0;
+    var x2 = <%= @calculator.max_participants / 10 %>;
+    var xs = 1.0 * (x2 - x1) / width;
+
+    var data = [];
+    for (var i = 0; i < width; i++) {
+      var x = x1 + i * xs;
+      var y = fn(x);
+      var row = [x];
+      if (y.length > 0) {
+        for (var j = 0; j < y.length; j++) {
+          row.push(y[j]);
+        }
+      } else {
+        row.push(y);
+      }
+      data.push(row);
+    }
+
+    g = new Dygraph(graph, data);
+  }
+
+  plot();
+</script>

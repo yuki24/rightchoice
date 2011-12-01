@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+<link rel="stylesheet" href="<%= url 'style.css' %>">
+<script type="text/javascript" src="<%= url 'dygraph-combined.js' %>"></script>
+<title>Rightchoice</title>
+
+</head>
+<body>
+  <header class="topbar">
+    <div class="fill">
+      <div class="container">
+        <p class="brand">Rightchoice Dashboard</p>
+
+        <ul class="nav secondary-nav">
+          <li><a href="/">Home</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <%= yield %>
+  </div>
+
+  <footer class="actions">
+    <div class="container">
+      <p><%= Rightchoice::VERSION %></p>
+    </div>
+  </footer>
+</body>
+</html>
