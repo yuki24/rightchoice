@@ -41,14 +41,14 @@ describe Rightchoice::AlternativeNode do
 
   describe "statistical numbers" do
     before :all do
-      @multi_variation = Rightchoice::MultiVariations.find_or_create(:test_name)
+      multi_variation = Rightchoice::MultiVariations.find_or_create(:test_name)
       variation1 = Rightchoice::Variation.find_or_create(:variation_name1, "foo", "bar", :choice => "foo")
       variation2 = Rightchoice::Variation.find_or_create(:variation_name2, "hoge", "fuga", :choice => "hoge")
-      @multi_variation.variations << variation1
-      @multi_variation.variations << variation2
-      @multi_variation.save
-      1000.times { @multi_variation.participate! }
-      100.times { @multi_variation.vote! }
+      multi_variation.variations << variation1
+      multi_variation.variations << variation2
+      multi_variation.save
+      1000.times { multi_variation.participate! }
+      100.times { multi_variation.vote! }
     end
 
     let(:calc) { Rightchoice::Calculator.new(:test_name) }
