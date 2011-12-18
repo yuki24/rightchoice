@@ -87,12 +87,15 @@ describe Rightchoice::ViewHelper do
     it "should reselect the combination" do
       # 2-3: same as above
       fake_voting!
+      participate!
       Rightchoice::Calculator.new(:landing_page).disable_ineffective_nodes!
       available?(:landing_page).should be_false
 
       # 4: select the combination over.
       reselect!(:landing_page)
-      available?(:landing_page).should be_true
+      multivariate_test(:landing_page).available?.should be_true
+      multivariate_test(:landing_page).already_participated?.should be_false
+      multivariate_test(:landing_page).already_voted?.should be_false
 
       # then make sure the new combination is not the same as before.
       alt = []

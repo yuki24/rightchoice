@@ -50,6 +50,7 @@ module Rightchoice
 
     def flush_choices!
       @selections = {}
+      @already_voted = @already_participated = nil
       variations.each(&:flush_choice!)
     end
 

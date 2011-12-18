@@ -57,7 +57,7 @@ module Rightchoice
       end
 
       def reselect!(test_name)
-        multivariate_tests[test_name].flush_choices! while(!available?(test_name))
+        multivariate_test(test_name).flush_choices! while(!available?(test_name))
       end
 
       def has_multivariate_test?(test_name)
