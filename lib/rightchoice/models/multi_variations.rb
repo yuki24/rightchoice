@@ -1,6 +1,7 @@
 module Rightchoice
   class MultiVariations
     attr_accessor :multivariate_name, :variations
+    attr_reader :votes_count, :participants_count
 
     def initialize(multivariate_name, options={})
       @multivariate_name = multivariate_name.to_s
@@ -39,6 +40,14 @@ module Rightchoice
       (expectation > 5) && (dispersion > 5)
     end
 
+    def already_participated?
+      @already_participated
+    end
+
+    def already_voted?
+      @already_voted
+    end
+
     def flush_choices!
       @selections = {}
       variations.each(&:flush_choice!)
@@ -54,17 +63,17 @@ module Rightchoice
     end
 
     def participate!
-      if redis.exists(redis_key)
-        redis.hincrby(redis_key, :participants_count, 1)
-        @participants_count = @participants_count + 1
-      end
+      save unless redis.exists(redis_key)
+      redis.hincrby(redis_key, :participants_count, 1)
+      @participants_count = @participants_count + 1
+      @already_participated = true
     end
 
     def vote!
-      if redis.exists(redis_key)
-        redis.hincrby(redis_key, :votes_count, 1)
-        @votes_count = @votes_count + 1
-      end
+      save unless redis.exists(redis_key)
+      redis.hincrby(redis_key, :votes_count, 1)
+      @votes_count = @votes_count + 1
+      @already_voted = true
     end
 
     def disable!

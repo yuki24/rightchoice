@@ -73,7 +73,6 @@ describe Rightchoice::MultiVariations do
 
   context "statistical numbers" do
     before :all do
-      @multi_variation.save
       1000.times { @multi_variation.participate! }
       100.times { @multi_variation.vote! }
     end
