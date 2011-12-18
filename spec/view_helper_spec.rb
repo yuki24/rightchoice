@@ -178,7 +178,7 @@ describe Rightchoice::ViewHelper do
         end
 
         it "should not add participants when there is no multivariate test" do
-          @_rightchoice_test_name = nil
+          @_rightchoice_testname = nil
           expect {
             participate!
           }.to change(multivariate_test(:landing_page), :participants_count).by(0)

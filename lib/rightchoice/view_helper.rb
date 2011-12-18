@@ -21,12 +21,12 @@ module Rightchoice
         end
 
         if block_given?
-          if defined?(capture)
-            block = Proc.new { yield(choice) }
-            concat(capture(choice, &block))
-          else
+          # if defined?(capture)
+          #   block = Proc.new { yield(choice) }
+          #   concat(capture(choice, &block))
+          # else
             yield(choice)
-          end
+          # end
         else
           choice
         end

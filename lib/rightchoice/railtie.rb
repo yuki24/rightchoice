@@ -1,4 +1,4 @@
-require 'railtie'
+require 'rails'
 
 module Rightchoice
   class Railtie < Rails::Railtie
@@ -6,7 +6,7 @@ module Rightchoice
     initializer "rightchoice" do
       ActiveSupport.on_load(:action_view) do
         require 'rightchoice/view_helper'
-        ::ActionView::Base.send :include, Rightchoice::ViewHelper
+        ::ActionController::Base.send :include, Rightchoice::ViewHelper
       end
     end
   end

@@ -1,9 +1,10 @@
 require 'json'
 require 'redis/namespace'
-#require 'rightchoice/dashboard'
+require 'rightchoice/dashboard'
 require 'rightchoice/models/variation'
 require 'rightchoice/models/multi_variations'
 require 'rightchoice/calculator'
+require 'rightchoice/railtie'
 
 module Rightchoice
   extend self
