@@ -11,7 +11,7 @@ module Rightchoice
 
     module InstanceMethods
       def select_variation(test_name, variation_name, *alternatives)
-        @_rightchoice_testname = test_name
+        session[:_rightchoice_testname] = test_name
         if participated_before?(test_name, variation_name)
           choice = multivariate_test(test_name).variations.find(variation_name).choice
         else
@@ -45,8 +45,8 @@ module Rightchoice
 
       # after filter
       def participate!
-        if @_rightchoice_testname && !multivariate_tests[@_rightchoice_testname].already_participated?
-          multivariate_tests[@_rightchoice_testname].participate!
+        if session[:_rightchoice_testname] && !multivariate_tests[session[:_rightchoice_testname]].already_participated?
+          multivariate_tests[session[:_rightchoice_testname]].participate!
         end
       end
 
