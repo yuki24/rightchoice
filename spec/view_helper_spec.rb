@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'rightchoice/view_helper'
 
 describe Rightchoice::ViewHelper do
+  def self.before_filter(f) nil; end
+  def self.after_filter(f) nil; end
   include Rightchoice::ViewHelper
 
   def session
