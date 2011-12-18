@@ -13,7 +13,7 @@ describe Rightchoice::ViewHelper do
     @_session = {}
   end
 
-  describe "selecting variation" do
+  describe "selecting variation and voting up" do
     it "should select without block" do
       alt = select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
       ["sign up", "join us", "learn more"].should include(alt)
@@ -41,6 +41,20 @@ describe Rightchoice::ViewHelper do
       select_variation(:landing_page, :button_color, "red", "green", "blue") do |alt|
         ["red", "green", "blue"].should include(alt)
       end
+    end
+
+    it "should vote up" do
+      select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+      select_variation(:landing_page, :button_color, "red", "green", "blue")
+
+      multivariate_test(:landing_page).save
+      votes = multivariate_test(:landing_page).votes_count
+      finish!(:landing_page)
+      multivariate_test(:landing_page).votes_count.should eq(votes + 1)
+
+      votes = multivariate_test(:landing_page).votes_count
+      finish!(:landing_page)
+      multivariate_test(:landing_page).votes_count.should eq(votes)
     end
   end
 

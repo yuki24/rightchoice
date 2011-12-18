@@ -22,6 +22,10 @@ module Rightchoice
       end
     end
 
+    def finish!(test_name)
+      multivariate_tests[test_name].vote! unless multivariate_tests[test_name].already_voted?
+    end
+
     # before filter
     def check_availability!
       multivariate_tests.each do |test_name, mv|
