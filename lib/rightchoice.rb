@@ -3,7 +3,6 @@ require 'redis/namespace'
 #require 'rightchoice/dashboard'
 require 'rightchoice/models/variation'
 require 'rightchoice/models/multi_variations'
-require 'rightchoice/view_helper'
 require 'rightchoice/calculator'
 
 module Rightchoice
