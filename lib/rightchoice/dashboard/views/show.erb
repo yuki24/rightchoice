@@ -17,6 +17,12 @@
   </tbody>
 </table>
 
+<div class="pull-right">
+  <form action="<%= url "/multivariate_tests/#{params[:multivariate_test]}/calculate" %>" method='post'>
+    <input type="submit" value="Disable Ineffective Combinations" class="btn primary">
+  </form>
+</div>
+
 <h3>Combinations</h3>
 
 <table class="zebra-striped">
@@ -51,8 +57,6 @@
     <% end %>
   </tbody>
 </table>
-
-<h3>Graph</h3>
 
 <div id="graph_div" style="margin: 20px auto; width:900px; height:300px;"></div>
 <script type="text/javascript">

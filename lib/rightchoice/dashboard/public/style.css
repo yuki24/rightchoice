@@ -10,3 +10,8 @@ footer.actions {
   padding: 17px 20px 18px 20px;
   margin-bottom: 0;
 }
+
+.pull-right form {
+  margin-top: 10px;
+  margin-bottom: 0;
+}

@@ -39,17 +39,20 @@ module Rightchoice
     end
 
     # shows the detail of the multivariate test
-    get '/:multivariate_test' do
+    get '/multivariate_tests/:multivariate_test' do
       @calculator = Rightchoice::Calculator.new(params[:multivariate_test])
       erb :show
     end
 
     # manually calculates 
-    post '/:multivariate_test' do
-      # @experiment = Split::Experiment.find(params[:experiment])
-      # @alternative = Split::Alternative.new(params[:alternative], params[:experiment])
-      # @experiment.winner = @alternative.name
-      redirect url('/#{params[:multivariate_test]}')
+    post '/multivariate_tests/:multivariate_test/calculate' do
+      Rightchoice::Calculator.new(params[:multivariate_test]).disable_ineffective_nodes!
+      redirect url("/multivariate_tests/#{params[:multivariate_test]}")
+    end
+
+    get '/flushall' do
+      Rightchoice.redis.flushall
+      redirect url("/")
     end
   end
 end
