@@ -44,7 +44,7 @@ describe Rightchoice::ViewHelper do
     end
   end
 
-  describe "check availability" do
+  describe "automatic optimization" do
     # TODO: any better ways to test those examples?
     before(:each) do
       flush_session!
@@ -116,6 +116,50 @@ describe Rightchoice::ViewHelper do
           (count % 5 == 0) ? multi_variation.vote! : nil
         elsif variation1.choice == "learn more" && variation2.choice == "blue"
           (count % 2 == 0) ? multi_variation.vote! : nil
+        end
+      end
+    end
+
+    describe "filters" do
+      describe "before filter #check_availability" do
+        it "should not do anything if there is no test" do
+          self.should_receive(:multivariate_tests).and_return({})
+          self.should_not_receive(:available?).with(:landing_page)
+          self.should_not_receive(:reselect!)
+          check_availability!
+        end
+
+        it "should check the availability but not reselect" do
+          select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+          select_variation(:landing_page, :button_color, "red", "green", "blue")
+
+          self.should_receive(:available?).with(:landing_page).and_return(true)
+          self.should_not_receive(:reselect!)
+          check_availability!
+        end
+
+        it "should reselect another combination" do
+          select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+          select_variation(:landing_page, :button_color, "red", "green", "blue")
+
+          self.should_receive(:available?).with(:landing_page).and_return(false)
+          self.should_receive(:reselect!).with(:landing_page)
+          check_availability!
+        end
+      end
+
+      describe "after filter" do
+        it "should add a participant" do
+          select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+          select_variation(:landing_page, :button_color, "red", "green", "blue")
+
+          participants = multivariate_test(:landing_page).participants_count
+          participate!(:landing_page)
+          multivariate_test(:landing_page).participants_count.should eq(participants + 1)
+
+          participants = multivariate_test(:landing_page).participants_count
+          participate!(:landing_page)
+          multivariate_test(:landing_page).participants_count.should eq(participants)
         end
       end
     end

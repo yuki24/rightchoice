@@ -22,6 +22,20 @@ module Rightchoice
       end
     end
 
+    # before filter
+    def check_availability!
+      multivariate_tests.each do |test_name, mv|
+        reselect!(test_name) unless available?(test_name)
+      end
+    end
+
+    # after filter
+    def participate!(test_name)
+      multivariate_tests[test_name].participate! unless multivariate_tests[test_name].already_participated?
+    end
+
+   private
+
     def available?(test_name)
       multivariate_tests[test_name] && multivariate_tests[test_name].available?
     end
@@ -29,8 +43,6 @@ module Rightchoice
     def reselect!(test_name)
       multivariate_tests[test_name].flush_choices! while(!available?(test_name))
     end
-
-    private
 
     def has_multivariate_test?(test_name)
       !multivariate_tests[test_name].nil?
