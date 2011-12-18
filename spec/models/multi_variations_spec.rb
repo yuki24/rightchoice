@@ -113,4 +113,14 @@ describe Rightchoice::MultiVariations do
     end
   end
 
+  describe "methods to reflesh" do
+    describe "#flush_choices!" do
+      it "should flush all the choices" do
+        selections = @multi_variation.selections
+
+        @multi_variation.flush_choices!
+        @multi_variation.selections.should_not == selections
+      end
+    end
+  end
 end

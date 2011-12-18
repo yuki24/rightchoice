@@ -31,12 +31,17 @@ module Rightchoice
     end
 
     def redis_key
-      @combinations ||= selections.to_a.map{|a| a.join(":") }.join(".")
+      @combinations = selections.to_a.map{|a| a.join(":") }.join(".")
       "#{name}.#{@combinations}"
     end
 
     def confident?
       (expectation > 5) && (dispersion > 5)
+    end
+
+    def flush_choices!
+      @selections = {}
+      variations.each(&:flush_choice!)
     end
 
     def save

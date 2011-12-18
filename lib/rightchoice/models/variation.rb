@@ -18,6 +18,10 @@ module Rightchoice
       @choice ||= random_select
     end
 
+    def flush_choice!
+      @choice = nil
+    end
+
     def child=(variation)
       # some validations should be add
       # - variations can not have themeselves as a child
