@@ -49,14 +49,13 @@ describe Rightchoice::ViewHelper do
       select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
       select_variation(:landing_page, :button_color, "red", "green", "blue")
 
-      multivariate_test(:landing_page).save
-      votes = multivariate_test(:landing_page).votes_count
-      finish!(:landing_page)
-      multivariate_test(:landing_page).votes_count.should eq(votes + 1)
+      expect {
+        finish!(:landing_page)
+      }.to change(multivariate_test(:landing_page), :votes_count).by(1)
 
-      votes = multivariate_test(:landing_page).votes_count
-      finish!(:landing_page)
-      multivariate_test(:landing_page).votes_count.should eq(votes)
+      expect {
+        finish!(:landing_page)
+      }.to change(multivariate_test(:landing_page), :votes_count).by(0)
     end
   end
 
@@ -103,7 +102,7 @@ describe Rightchoice::ViewHelper do
     end
 
     def fake_voting!
-      3000.times do |count|
+      1000.times do |count|
         # initialization
         multi_variation = Rightchoice::MultiVariations.find_or_create(:landing_page)
         variation1 = Rightchoice::Variation.find_or_create(:button_msg, "sign up", "join us", "learn more")
@@ -169,13 +168,20 @@ describe Rightchoice::ViewHelper do
           select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
           select_variation(:landing_page, :button_color, "red", "green", "blue")
 
-          participants = multivariate_test(:landing_page).participants_count
-          participate!(:landing_page)
-          multivariate_test(:landing_page).participants_count.should eq(participants + 1)
+          expect {
+            participate!
+          }.to change(multivariate_test(:landing_page), :participants_count).by(1)
 
-          participants = multivariate_test(:landing_page).participants_count
-          participate!(:landing_page)
-          multivariate_test(:landing_page).participants_count.should eq(participants)
+          expect {
+            participate!
+          }.to change(multivariate_test(:landing_page), :participants_count).by(0)
+        end
+
+        it "should not add participants when there is no multivariate test" do
+          @_rightchoice_test_name = nil
+          expect {
+            participate!
+          }.to change(multivariate_test(:landing_page), :participants_count).by(0)
         end
       end
     end
