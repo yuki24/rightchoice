@@ -2,7 +2,7 @@ module Rightchoice
   module ViewHelper
 
     def select_variation(test_name, variation_name, *alternatives)
-      if participated_before?(test_name)
+      if participated_before?(test_name, variation_name)
         choice = multivariate_test(test_name).variations.find(variation_name).choice
       else
         variation = Rightchoice::Variation.find_or_create(variation_name, *alternatives)
@@ -22,11 +22,24 @@ module Rightchoice
       end
     end
 
+    def available?(test_name)
+      multivariate_tests[test_name] && multivariate_tests[test_name].available?
+    end
+
+    def reselect!(test_name)
+      multivariate_tests[test_name].flush_choices! while(!available?(test_name))
+    end
+
     private
 
-    def participated_before?(test_name)
+    def has_multivariate_test?(test_name)
       !multivariate_tests[test_name].nil?
     end
+
+    def has_variation?(test_name, variation_name)
+      has_multivariate_test?(test_name) && !multivariate_test(test_name).variations.find(variation_name).nil?
+    end
+    alias :participated_before? :has_variation?
 
     def multivariate_test(name)
       multivariate_tests[name] ||= Rightchoice::MultiVariations.find_or_create(name)
@@ -35,6 +48,5 @@ module Rightchoice
     def multivariate_tests
       session[:multivariate_tests] ||= {}
     end
-
   end
 end
