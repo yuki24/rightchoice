@@ -71,7 +71,7 @@
     var graph = document.getElementById("graph_div");
     var width = parseInt(graph.style.width);
     var x1 = 0;
-    var x2 = <%= @calculator.max_participants / 10 %>;
+    var x2 = <%= @calculator.max_participants %>;
     var xs = 1.0 * (x2 - x1) / width;
 
     var data = [];
