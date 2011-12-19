@@ -3,7 +3,7 @@ require 'rightchoice/calculator'
 
 describe Rightchoice::Calculator do
   before do
-    1000.times do |count|
+    300.times do |count|
       # initialization
       multi_variation = Rightchoice::MultiVariations.find_or_create(:test_sample)
       variation1 = Rightchoice::Variation.find_or_create(:variation_name1, "foo", "bar")

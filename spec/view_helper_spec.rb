@@ -105,7 +105,7 @@ describe Rightchoice::ViewHelper do
     end
 
     def fake_voting!
-      1000.times do |count|
+      300.times do |count|
         # initialization
         multi_variation = Rightchoice::MultiVariations.find_or_create(:landing_page)
         variation1 = Rightchoice::Variation.find_or_create(:button_msg, "sign up", "join us", "learn more")
