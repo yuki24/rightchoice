@@ -4,9 +4,15 @@ module Rightchoice
     def participants_count
       redis.exists(redis_key) ? redis.hget(redis_key, "participants_count").to_i : nil
     end
+    alias :participants :participants_count
 
     def votes_count
-      redis.exists(redis_key) ? redis.hget(redis_key, "votes_count").to_i : nil
+      redis.exists(redis_key) ? (redis.hget(redis_key, "votes_count").to_i * normalization_range) : nil
+    end
+    alias :votes :votes_count
+
+    def normalized_to(participants)
+      @_scale ||= participants
     end
 
     def expectation
@@ -14,7 +20,7 @@ module Rightchoice
     end
 
     def dispersion
-      (expectation * (1 - (votes_count.to_f / participants_count))) if participants_count != 0
+      expectation * (1 - (votes.to_f / (participants * range))) if participants != 0
     end
 
     def probability
@@ -58,6 +64,11 @@ module Rightchoice
     end
 
     private
+
+    def normalization_range
+      @_scale ? (@_scale.to_f / participants_count) : 1
+    end
+    alias :range :normalization_range
 
     def redis
       Rightchoice.redis

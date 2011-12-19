@@ -63,6 +63,12 @@ describe Rightchoice::AlternativeNode do
       its(:available?) { should be_true }
     end
 
+    it "should normalize numbers" do
+      calc.root_node["foo"]["hoge"].normalized_to(900)
+      calc.root_node["foo"]["hoge"].expectation.should == 90
+      calc.root_node["foo"]["hoge"].dispersion.should == 81
+    end
+
     describe "availability" do
       it "should disable its node" do
         calc.root_node["foo"]["hoge"].available?.should be_true
