@@ -187,6 +187,16 @@ describe Rightchoice::ViewHelper do
           participate!
         }.to change(multivariate_test(:landing_page), :participants_count).by(0)
       end
+
+      it "should start calculating when the number of participants hits 100" do
+        Rightchoice::Calculator.any_instance.should_receive(:disable_ineffective_nodes!)
+
+        200.times do
+          @_session = {}
+          select_variation(:test_page, :button_msg, "sign up", "join us")
+          participate!
+        end
+      end
     end
   end
 end

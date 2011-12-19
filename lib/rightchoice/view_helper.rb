@@ -45,8 +45,12 @@ module Rightchoice
 
       # after filter
       def participate!
-        if session[:_rightchoice_testname] && !multivariate_tests[session[:_rightchoice_testname]].already_participated?
-          multivariate_tests[session[:_rightchoice_testname]].participate!
+        testname = session[:_rightchoice_testname]
+        if testname && !multivariate_test(testname).already_participated?
+          multivariate_test(testname).participate!
+          if Rightchoice.redis.hget(multivariate_test(testname).redis_key, "participants_count") == "100"
+            Rightchoice::Calculator.new(testname).disable_ineffective_nodes!
+          end
         end
       end
 
