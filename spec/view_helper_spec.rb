@@ -137,55 +137,55 @@ describe Rightchoice::ViewHelper do
         end
       end
     end
+  end
 
-    describe "filters" do
-      describe "before filter #check_availability" do
-        it "should not do anything if there is no test" do
-          self.should_receive(:multivariate_tests).and_return({})
-          self.should_not_receive(:available?).with(:landing_page)
-          self.should_not_receive(:reselect!)
-          check_availability!
-        end
-
-        it "should check the availability but not reselect" do
-          select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-          select_variation(:landing_page, :button_color, "red", "green", "blue")
-
-          self.should_receive(:available?).with(:landing_page).and_return(true)
-          self.should_not_receive(:reselect!)
-          check_availability!
-        end
-
-        it "should reselect another combination" do
-          select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-          select_variation(:landing_page, :button_color, "red", "green", "blue")
-
-          self.should_receive(:available?).with(:landing_page).and_return(false)
-          self.should_receive(:reselect!).with(:landing_page)
-          check_availability!
-        end
+  describe "filters" do
+    describe "before filter #check_availability" do
+      it "should not do anything if there is no test" do
+        self.should_receive(:multivariate_tests).and_return({})
+        self.should_not_receive(:available?).with(:landing_page)
+        self.should_not_receive(:reselect!)
+        check_availability!
       end
 
-      describe "after filter" do
-        it "should add a participant" do
-          select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-          select_variation(:landing_page, :button_color, "red", "green", "blue")
+      it "should check the availability but not reselect" do
+        select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+        select_variation(:landing_page, :button_color, "red", "green", "blue")
 
-          expect {
-            participate!
-          }.to change(multivariate_test(:landing_page), :participants_count).by(1)
+        self.should_receive(:available?).with(:landing_page).and_return(true)
+        self.should_not_receive(:reselect!)
+        check_availability!
+      end
 
-          expect {
-            participate!
-          }.to change(multivariate_test(:landing_page), :participants_count).by(0)
-        end
+      it "should reselect another combination" do
+        select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+        select_variation(:landing_page, :button_color, "red", "green", "blue")
 
-        it "should not add participants when there is no multivariate test" do
-          session[:_rightchoice_testname] = nil
-          expect {
-            participate!
-          }.to change(multivariate_test(:landing_page), :participants_count).by(0)
-        end
+        self.should_receive(:available?).with(:landing_page).and_return(false)
+        self.should_receive(:reselect!).with(:landing_page)
+        check_availability!
+      end
+    end
+
+    describe "after filter #participate!" do
+      it "should add a participant" do
+        select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+        select_variation(:landing_page, :button_color, "red", "green", "blue")
+
+        expect {
+          participate!
+        }.to change(multivariate_test(:landing_page), :participants_count).by(1)
+
+        expect {
+          participate!
+        }.to change(multivariate_test(:landing_page), :participants_count).by(0)
+      end
+
+      it "should not add participants when there is no multivariate test" do
+        session[:_rightchoice_testname] = nil
+        expect {
+          participate!
+        }.to change(multivariate_test(:landing_page), :participants_count).by(0)
       end
     end
   end
