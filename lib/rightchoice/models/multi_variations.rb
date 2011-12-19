@@ -58,8 +58,8 @@ module Rightchoice
       if !redis.exists(redis_key)
         redis.mapped_hmset(redis_key,
                     :available => @available,
-                    :participants_count => @participants_count,
-                    :votes_count => @votes_count)
+                    :participants_count => 0,
+                    :votes_count => 0)
       end
     end
 
@@ -81,8 +81,9 @@ module Rightchoice
       redis.hmset(redis_key, :available, false)
     end
 
-    def destroy
-    end
+    # def destroy
+    #
+    # end
 
     def available?
       redis.exists(redis_key) ? (redis.hget(redis_key, "available") == "true") : true

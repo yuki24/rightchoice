@@ -83,7 +83,16 @@ describe Rightchoice::MultiVariations do
     its(:confident?) { should be_true }
   end
 
-  describe 'availability check' do
+  describe 'availability' do
+    it "should save a multivariate test" do
+      @multi_variation.participate!
+      Rightchoice.redis.del(@multi_variation.redis_key)
+
+      @multi_variation.participate!
+      Rightchoice.redis.hget(@multi_variation.redis_key, "participants_count").should == "1"
+      Rightchoice.redis.hget(@multi_variation.redis_key, "votes_count").should == "0"
+    end
+
     context "for available variations" do
       subject { @multi_variation }
       its(:available?) { should be_true }
