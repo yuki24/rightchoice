@@ -45,6 +45,7 @@ describe Rightchoice::Calculator do
       calc.root_node["foo"]["fuga"].available?.should be_false
       calc.root_node["bar"]["hoge"].available?.should be_false
       calc.root_node["bar"]["fuga"].available?.should be_false
+      calc.finished?.should be_true
     end
   end
 end

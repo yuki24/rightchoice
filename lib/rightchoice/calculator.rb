@@ -21,6 +21,10 @@ module Rightchoice
       leafs.map{|l| l.participants_count }.max
     end
 
+    def finished?
+      leafs.map{|l| l.available? ? 1 : 0 }.reduce(:+) == 1
+    end
+
     def disable_ineffective_nodes!
       leafs = sorted_leafs
       best_choice = leafs.pop
