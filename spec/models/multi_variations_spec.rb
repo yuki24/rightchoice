@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rightchoice/models/multi_variations'
 
 describe Rightchoice::MultiVariations do
-  before(:all) { Rightchoice.redis.flushall }
+  before(:all) { Rightchoice.redis.flushdb }
 
   before :all do
     @multi_variation = Rightchoice::MultiVariations.find_or_create(:test_name)
@@ -108,7 +108,7 @@ describe Rightchoice::MultiVariations do
 
   describe "finders" do
     before :all do
-      Rightchoice.redis.flushall
+      Rightchoice.redis.flushdb
       100.times{|i| Rightchoice::MultiVariations.find_or_create("test#{i}") }
     end
 

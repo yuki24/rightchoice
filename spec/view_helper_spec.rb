@@ -11,7 +11,7 @@ describe Rightchoice::ViewHelper do
   end
 
   def flush_session!
-    Rightchoice.redis.flushall
+    Rightchoice.redis.flushdb
     @_session = {}
   end
 
