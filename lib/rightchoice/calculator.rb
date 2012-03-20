@@ -3,18 +3,16 @@ require 'rightchoice/calculators/alternative_node'
 
 module Rightchoice
   class Calculator
-    attr_accessor :variations, :root_node
+    attr_accessor :factors, :root_node
 
     def initialize(multivariate_test)
-      # @mv_test = MultiVariation.find(multivariate_test)
-      # @mv_test.variations
-      # @mv_test.variations.first.alternatives
-      @variations = JSON(Rightchoice.redis.hget("all_mvtests", multivariate_test))
-      @variations = @variations.map do |variation_name|
-        Variation.new(variation_name, *JSON(Rightchoice.redis.hget("all_tests", variation_name)))
-      end
+      @mv_test = MultivariateTest.find(multivariate_test)
       @root_node = AlternativeNode.new(multivariate_test, "Root")
       build_tree!
+    end
+
+    def factors
+      @factors ||= @mv_test.factors
     end
 
     def max_participants
@@ -26,26 +24,26 @@ module Rightchoice
     end
 
     def disable_ineffective_nodes!
-      leafs = sorted_leafs
-      best_choice = leafs.pop
+      ls = sorted_leafs
+      best_choice = ls.pop
       leafs.each do |l|
         l.disable! if l.confidence_interval.last < best_choice.confidence_interval.first
       end
     end
 
     def build_tree!
-      @variations.each do |variation|
+      factors.each do |factor|
         leafs.each do |leaf|
-          variation.alternatives.each do |alternative|
-            leaf << AlternativeNode.new(alternative, variation.name)
+          factor.alternatives.each do |alt|
+            leaf << AlternativeNode.new(alt, factor.name)
           end
         end
       end
     end
 
     def leafs
-      [].tap do |leafs|
-        @root_node.each_leaf{|leaf| leafs << leaf }
+      [].tap do |l|
+        @root_node.each_leaf{|leaf| l << leaf }
       end
     end
 

@@ -5,17 +5,27 @@ describe Rightchoice::AlternativeNode do
   describe "initialization" do
     before :all do
       # initialization
-      multi_variation = Rightchoice::MultiVariations.find_or_create(:test_sample)
-      variation1 = Rightchoice::Variation.find_or_create(:variation_name1, "foo", "bar")
-      variation2 = Rightchoice::Variation.find_or_create(:variation_name2, "hoge", "fuga")
-      variation3 = Rightchoice::Variation.find_or_create(:variation_name3, "miko", "roid")
-      multi_variation.variations << variation1
-      multi_variation.variations << variation2
-      multi_variation.variations << variation3
-      multi_variation.save
+      test = Rightchoice::MultivariateTest.find_or_create(:test_sample)
+      test.factors << Rightchoice::Factor.new(:factor1, "foo", "bar")
+      test.factors << Rightchoice::Factor.new(:factor2, "hoge", "fuga")
+      test.factors << Rightchoice::Factor.new(:factor3, "miko", "roid")
+      test.save
     end
 
     let(:calc) { Rightchoice::Calculator.new(:test_sample) }
+
+    def keys
+      [
+       "test_sample.factor1:foo.factor2:hoge.factor3:miko",
+       "test_sample.factor1:foo.factor2:hoge.factor3:roid",
+       "test_sample.factor1:foo.factor2:fuga.factor3:miko",
+       "test_sample.factor1:foo.factor2:fuga.factor3:roid",
+       "test_sample.factor1:bar.factor2:hoge.factor3:miko",
+       "test_sample.factor1:bar.factor2:hoge.factor3:roid",
+       "test_sample.factor1:bar.factor2:fuga.factor3:miko",
+       "test_sample.factor1:bar.factor2:fuga.factor3:roid"
+      ]
+    end
 
     it "should have 2 variations and 7 nodes" do
       count = 0 # no methods like each_leaf_with_index so doing it myself. dirty.
@@ -24,31 +34,16 @@ describe Rightchoice::AlternativeNode do
         count = count + 1
       end
     end
-
-    def keys
-      [
-       "test_sample.variation_name1:foo.variation_name2:hoge.variation_name3:miko",
-       "test_sample.variation_name1:foo.variation_name2:hoge.variation_name3:roid",
-       "test_sample.variation_name1:foo.variation_name2:fuga.variation_name3:miko",
-       "test_sample.variation_name1:foo.variation_name2:fuga.variation_name3:roid",
-       "test_sample.variation_name1:bar.variation_name2:hoge.variation_name3:miko",
-       "test_sample.variation_name1:bar.variation_name2:hoge.variation_name3:roid",
-       "test_sample.variation_name1:bar.variation_name2:fuga.variation_name3:miko",
-       "test_sample.variation_name1:bar.variation_name2:fuga.variation_name3:roid"
-      ]
-    end
   end
 
   describe "statistical numbers" do
     before :all do
-      multi_variation = Rightchoice::MultiVariations.find_or_create(:test_name)
-      variation1 = Rightchoice::Variation.find_or_create(:variation_name1, "foo", "bar", :choice => "foo")
-      variation2 = Rightchoice::Variation.find_or_create(:variation_name2, "hoge", "fuga", :choice => "hoge")
-      multi_variation.variations << variation1
-      multi_variation.variations << variation2
-      multi_variation.save
-      1000.times { multi_variation.participate! }
-      100.times { multi_variation.vote! }
+      test = Rightchoice::MultivariateTest.find_or_create(:test_name)
+      test.factors << Rightchoice::Factor.new(:factor1, "foo", "bar", :choice => "foo")
+      test.factors << Rightchoice::Factor.new(:factor2, "hoge", "fuga", :choice => "hoge")
+      test.save
+      1000.times { test.participate! }
+      100.times { test.vote! }
     end
 
     let(:calc) { Rightchoice::Calculator.new(:test_name) }
@@ -61,12 +56,6 @@ describe Rightchoice::AlternativeNode do
       its(:confidence_interval) { should == (0.08434672558216652..0.11565327441783349) }
       its(:confident?) { should be_true }
       its(:available?) { should be_true }
-    end
-
-    it "should normalize numbers" do
-      calc.root_node["foo"]["hoge"].normalized_to(900)
-      calc.root_node["foo"]["hoge"].expectation.should == 90
-      calc.root_node["foo"]["hoge"].dispersion.should == 81
     end
 
     describe "availability" do

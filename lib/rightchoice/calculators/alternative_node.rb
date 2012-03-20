@@ -7,20 +7,13 @@ module Rightchoice
     alias :participants :participants_count
 
     def votes_count
-      redis.exists(redis_key) ? (redis.hget(redis_key, "votes_count").to_i * normalization_range) : nil
+      redis.exists(redis_key) ? redis.hget(redis_key, "votes_count").to_i : nil
     end
-    alias :votes :votes_count
-
-    def normalized_to(participants)
-      @_scale ||= participants
-    end
-
-    def expectation
-      votes_count
-    end
+    alias :votes       :votes_count
+    alias :expectation :votes_count
 
     def dispersion
-      expectation * (1 - (votes.to_f / (participants * range))) if participants != 0
+      expectation * (1 - (votes.to_f / participants)) if participants != 0
     end
 
     def probability
@@ -45,30 +38,14 @@ module Rightchoice
     end
 
     def redis_key
-      if self.is_leaf?
-        @redis_key ||=
-          begin
-            key = ""
-            target_node = self
-            while(target_node.parent) do
-              key.insert(0, ".#{target_node.key_pair}")
-              target_node = target_node.parent
-            end
-            "#{target_node.name}#{key}"
-          end
-      end
+      @redis_key ||= [self, *parentage].reverse.map(&:key_pair).join(".")
     end
 
     def key_pair
-      "#{content}:#{name}"
+      is_root? ? name : "#{content}:#{name}"
     end
 
     private
-
-    def normalization_range
-      @_scale ? (@_scale.to_f / participants_count) : 1
-    end
-    alias :range :normalization_range
 
     def redis
       Rightchoice.redis

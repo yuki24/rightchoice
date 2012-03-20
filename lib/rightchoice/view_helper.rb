@@ -10,14 +10,14 @@ module Rightchoice
     end
 
     module InstanceMethods
-      def select_variation(test_name, variation_name, *alternatives)
+      def select_variation(test_name, factor_name, *alternatives)
         session[:_rightchoice_testname] = test_name
-        if participated_before?(test_name, variation_name)
-          choice = multivariate_test(test_name).variations.find(variation_name).choice
+        if participated_before?(test_name, factor_name)
+          choice = multivariate_test(test_name).factors.find(factor_name).choice
         else
-          variation = Rightchoice::Variation.find_or_create(variation_name, *alternatives)
-          multivariate_test(test_name).variations << variation
-          choice = variation.choice
+          factor = Rightchoice::Factor.new(factor_name, *alternatives)
+          multivariate_test(test_name).factors << factor
+          choice = factor.choice
         end
 
         if block_given?
@@ -33,7 +33,7 @@ module Rightchoice
       end
 
       def finish!(test_name)
-        multivariate_tests[test_name].vote! unless multivariate_tests[test_name].already_voted?
+        multivariate_test(test_name).vote! unless multivariate_test(test_name).already_voted?
       end
 
       # before filter
@@ -68,13 +68,13 @@ module Rightchoice
         !multivariate_tests[test_name].nil?
       end
 
-      def has_variation?(test_name, variation_name)
-        has_multivariate_test?(test_name) && !multivariate_test(test_name).variations.find(variation_name).nil?
+      def has_variation?(test_name, factor_name)
+        has_multivariate_test?(test_name) && !multivariate_test(test_name).factors.find(factor_name).nil?
       end
       alias :participated_before? :has_variation?
 
       def multivariate_test(name)
-        multivariate_tests[name] ||= Rightchoice::MultiVariations.find_or_create(name)
+        multivariate_tests[name] ||= Rightchoice::MultivariateTest.find_or_create(name)
       end
 
       def multivariate_tests

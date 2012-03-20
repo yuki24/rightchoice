@@ -20,7 +20,7 @@ describe Rightchoice::ViewHelper do
       alt = select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
       ["sign up", "join us", "learn more"].should include(alt)
 
-      Rightchoice::Variation.should_not_receive(:new).with(:button_msg, "sign up", "join us", "learn more")
+      Rightchoice::Factor.should_not_receive(:new).with(:button_msg, "sign up", "join us", "learn more")
       alt = select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
       ["sign up", "join us", "learn more"].should include(alt)
     end
@@ -30,7 +30,7 @@ describe Rightchoice::ViewHelper do
         ["red", "green", "blue"].should include(alt)
       end
 
-      Rightchoice::Variation.should_not_receive(:new).with(:button_color, "red", "green", "blue")
+      Rightchoice::Factor.should_not_receive(:new).with(:button_color, "red", "green", "blue")
       select_variation(:landing_page, :button_color, "red", "green", "blue") do |alt|
         ["red", "green", "blue"].should include(alt)
       end
@@ -107,33 +107,33 @@ describe Rightchoice::ViewHelper do
     def fake_voting!
       300.times do |count|
         # initialization
-        multi_variation = Rightchoice::MultiVariations.find_or_create(:landing_page)
-        variation1 = Rightchoice::Variation.find_or_create(:button_msg, "sign up", "join us", "learn more")
-        variation2 = Rightchoice::Variation.find_or_create(:button_color, "red", "green", "blue")
-        multi_variation.variations << variation1
-        multi_variation.variations << variation2
-        multi_variation.save
-        multi_variation.participate!
+        test = Rightchoice::MultivariateTest.find_or_create(:landing_page)
+        factor1 = Rightchoice::Factor.new(:button_msg, "sign up", "join us", "learn more")
+        factor2 = Rightchoice::Factor.new(:button_color, "red", "green", "blue")
+        test.factors << factor1
+        test.factors << factor2
+        test.save
+        test.participate!
 
         # fake voting
-        if variation1.choice == "sign up" && variation2.choice == "red"
-          (count % 100 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "sign up" && variation2.choice == "green"
-          (count % 80 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "sign up" && variation2.choice == "blue"
-          (count % 60 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "join us" && variation2.choice == "red"
-          (count % 50 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "join us" && variation2.choice == "green"
-          (count % 40 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "join us" && variation2.choice == "blue"
-          (count % 30 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "learn more" && variation2.choice == "red"
-          (count % 20 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "learn more" && variation2.choice == "green"
-          (count % 5 == 0) ? multi_variation.vote! : nil
-        elsif variation1.choice == "learn more" && variation2.choice == "blue"
-          (count % 2 == 0) ? multi_variation.vote! : nil
+        if factor1.choice == "sign up" && factor2.choice == "red"
+          (count % 100 == 0) ? test.vote! : nil
+        elsif factor1.choice == "sign up" && factor2.choice == "green"
+          (count % 80 == 0) ? test.vote! : nil
+        elsif factor1.choice == "sign up" && factor2.choice == "blue"
+          (count % 60 == 0) ? test.vote! : nil
+        elsif factor1.choice == "join us" && factor2.choice == "red"
+          (count % 50 == 0) ? test.vote! : nil
+        elsif factor1.choice == "join us" && factor2.choice == "green"
+          (count % 40 == 0) ? test.vote! : nil
+        elsif factor1.choice == "join us" && factor2.choice == "blue"
+          (count % 30 == 0) ? test.vote! : nil
+        elsif factor1.choice == "learn more" && factor2.choice == "red"
+          (count % 20 == 0) ? test.vote! : nil
+        elsif factor1.choice == "learn more" && factor2.choice == "green"
+          (count % 5 == 0) ? test.vote! : nil
+        elsif factor1.choice == "learn more" && factor2.choice == "blue"
+          (count % 2 == 0) ? test.vote! : nil
         end
       end
     end

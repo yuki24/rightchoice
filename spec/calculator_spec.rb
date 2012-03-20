@@ -5,32 +5,32 @@ describe Rightchoice::Calculator do
   before do
     300.times do |count|
       # initialization
-      multi_variation = Rightchoice::MultiVariations.find_or_create(:test_sample)
-      variation1 = Rightchoice::Variation.find_or_create(:variation_name1, "foo", "bar")
-      variation2 = Rightchoice::Variation.find_or_create(:variation_name2, "hoge", "fuga")
-      multi_variation.variations << variation1
-      multi_variation.variations << variation2
-      multi_variation.save
-      multi_variation.participate!
+      test = Rightchoice::MultivariateTest.find_or_create(:test_sample)
+      factor1 = Rightchoice::Factor.new(:factor1, "foo", "bar")
+      factor2 = Rightchoice::Factor.new(:factor2, "hoge", "fuga")
+      test.factors << factor1
+      test.factors << factor2
+      test.save
+      test.participate!
 
       # fake voting
-      if variation1.choice == "foo" && variation2.choice == "hoge"
-        (count % 2 == 0) ? multi_variation.vote! : nil
-      elsif variation1.choice == "foo" && variation2.choice == "fuga"
-        (count % 10 == 0) ? multi_variation.vote! : nil
-      elsif variation1.choice == "bar" && variation2.choice == "hoge"
-        (count % 15 == 0) ? multi_variation.vote! : nil
-      elsif variation1.choice == "bar" && variation2.choice == "fuga"
-        (count % 20 == 0) ? multi_variation.vote! : nil
+      if factor1.choice == "foo" && factor2.choice == "hoge"
+        (count % 2 == 0) ? test.vote! : nil
+      elsif factor1.choice == "foo" && factor2.choice == "fuga"
+        (count % 10 == 0) ? test.vote! : nil
+      elsif factor1.choice == "bar" && factor2.choice == "hoge"
+        (count % 15 == 0) ? test.vote! : nil
+      elsif factor1.choice == "bar" && factor2.choice == "fuga"
+        (count % 20 == 0) ? test.vote! : nil
       end
     end
   end
 
   describe "initialization" do
-    it "should have 2 variations and 7 nodes" do
+    it "should have 2 factors and 7 nodes" do
       calc = Rightchoice::Calculator.new(:test_sample)
-      calc.variations.first.class.should == Rightchoice::Variation
-      calc.variations.count.should == 2
+      calc.factors.first.class.should == Rightchoice::Factor
+      calc.factors.count.should == 2
       calc.root_node.size.should == 7
     end
   end
