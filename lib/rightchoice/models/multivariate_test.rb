@@ -1,5 +1,5 @@
 module Rightchoice
-  class MultiVariations
+  class MultivariateTest
     attr_accessor :multivariate_name, :variations
     attr_reader :votes_count, :participants_count
 
