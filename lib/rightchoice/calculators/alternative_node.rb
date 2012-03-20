@@ -29,7 +29,7 @@ module Rightchoice
 
     def confidence_interval
       p = probability and n = participants_count
-      (p-(1.96 * Math.sqrt((p*(1-p)) / n)))..(p+(1.96 * Math.sqrt((p*(1-p)) / n)))
+      (p-(1.65 * Math.sqrt((p*(1-p)) / n)))..(p+(1.65 * Math.sqrt((p*(1-p)) / n)))
     end
 
     def available?

@@ -58,7 +58,7 @@ describe Rightchoice::AlternativeNode do
       its(:expectation) { should == 100 }
       its(:dispersion) { should == 90 }
       its(:probability) { should == 0.1 }
-      its(:confidence_interval) { should == (0.08140580735820993..0.11859419264179008) }
+      its(:confidence_interval) { should == (0.08434672558216652..0.11565327441783349) }
       its(:confident?) { should be_true }
       its(:available?) { should be_true }
     end
