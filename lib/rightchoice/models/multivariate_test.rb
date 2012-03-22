@@ -3,32 +3,29 @@ require 'rightchoice/models/factor'
 
 module Rightchoice
   class MultivariateTest
-    attr_accessor :multivariate_name, :factors
+    attr_accessor :multivariate_name
     attr_reader :votes_count, :participants_count
+    alias :name :multivariate_name
 
     def initialize(multivariate_name, options={})
       @multivariate_name = multivariate_name.to_s
-      @factors = Rightchoice::FactorList.new
-      @factors.mvtest = self
-      @selections = {}
       @available = true
       @participants_count = (options[:participants_count] || 0)
       @votes_count = (options[:votes_count] || 0)
     end
 
-    def name
-      multivariate_name
+    def factors
+      @factors ||= Rightchoice::FactorList.new(self)
     end
 
     def selections
-      @selections.tap do |s|
+      @selections ||= {}.tap do |s|
         factors.each {|f| s.store(f.name, f.choice) }
       end
     end
 
     def redis_key
-      @combinations = selections.to_a.map{|a| a.join(":") }.join(".")
-      "#{name}.#{@combinations}"
+      @redis_key ||= "#{name}." + selections.to_a.map{|a| a.join(":") }.join(".")
     end
 
     def already_participated?
@@ -40,8 +37,7 @@ module Rightchoice
     end
 
     def flush_choices!
-      @selections = {}
-      @already_voted = @already_participated = nil
+      @selections = @already_voted = @already_participated = @redis_key = nil
       factors.each(&:flush_choice!)
     end
 
@@ -73,7 +69,7 @@ module Rightchoice
 
     def store_metadata!
       push_to_index!
-      update_factors! if @factors.changed?
+      update_factors! if factors.changed?
     end
 
     def available?
@@ -125,6 +121,11 @@ module Rightchoice
   class FactorList < Array
     attr_accessor :mvtest
     attr_writer :changed
+
+    def initialize(parent, *args)
+      @mvtest = parent
+      super(args)
+    end
 
     def <<(factor)
       super(factor) and @changed = true
