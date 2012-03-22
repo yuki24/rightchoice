@@ -3,26 +3,21 @@ require 'rightchoice/calculator'
 
 describe Rightchoice::Calculator do
   before do
-    200.times do |count|
-      # initialization
-      test = Rightchoice::MultivariateTest.find_or_create(:test_sample)
-      factor1 = Rightchoice::Factor.new(:factor1, "foo", "bar")
-      factor2 = Rightchoice::Factor.new(:factor2, "hoge", "fuga")
-      test.factors << factor1
-      test.factors << factor2
-      test.save
-      test.participate!
+    test = Rightchoice::MultivariateTest.find_or_create(:test_sample)
+    factor1 = Rightchoice::Factor.new(:factor1, "foo", "bar")
+    factor2 = Rightchoice::Factor.new(:factor2, "hoge", "fuga")
+    test.factors << factor1
+    test.factors << factor2
+    test.save
 
-      # fake voting
-      if factor1.choice == "foo" && factor2.choice == "hoge"
-        (count % 2 == 0) ? test.vote! : nil
-      elsif factor1.choice == "foo" && factor2.choice == "fuga"
-        (count % 10 == 0) ? test.vote! : nil
-      elsif factor1.choice == "bar" && factor2.choice == "hoge"
-        (count % 15 == 0) ? test.vote! : nil
-      elsif factor1.choice == "bar" && factor2.choice == "fuga"
-        (count % 20 == 0) ? test.vote! : nil
-      end
+    {
+      "test_sample.factor1:foo.factor2:hoge" => 90,
+      "test_sample.factor1:foo.factor2:fuga" => 30,
+      "test_sample.factor1:bar.factor2:hoge" => 20,
+      "test_sample.factor1:bar.factor2:fuga" => 10,
+    }.each do |key, val|
+      Rightchoice.redis.mapped_hmset(key,
+        available: true, participants_count: 100, votes_count: val)
     end
   end
 

@@ -42,8 +42,8 @@ describe Rightchoice::AlternativeNode do
       test.factors << Rightchoice::Factor.new(:factor1, "foo", "bar", :choice => "foo")
       test.factors << Rightchoice::Factor.new(:factor2, "hoge", "fuga", :choice => "hoge")
       test.save
-      500.times { test.participate! }
-      50.times { test.vote! }
+      Rightchoice.redis.hset(test.redis_key, "participants_count", 500)
+      Rightchoice.redis.hset(test.redis_key, "votes_count", 50)
     end
 
     let(:calc) { Rightchoice::Calculator.new(:test_name) }

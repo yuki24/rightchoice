@@ -105,36 +105,26 @@ describe Rightchoice::ViewHelper do
     end
 
     def fake_voting!
-      200.times do |count|
-        # initialization
-        test = Rightchoice::MultivariateTest.find_or_create(:landing_page)
-        factor1 = Rightchoice::Factor.new(:button_msg, "sign up", "join us", "learn more")
-        factor2 = Rightchoice::Factor.new(:button_color, "red", "green", "blue")
-        test.factors << factor1
-        test.factors << factor2
-        test.save
-        test.participate!
+      test = Rightchoice::MultivariateTest.find_or_create(:land_page)
+      factor1 = Rightchoice::Factor.new(:btn_msg, "sign up", "join us", "learn more")
+      factor2 = Rightchoice::Factor.new(:btn_color, "red", "green", "blue")
+      test.factors << factor1
+      test.factors << factor2
+      test.save
 
-        # fake voting
-        if factor1.choice == "sign up" && factor2.choice == "red"
-          (count % 100 == 0) ? test.vote! : nil
-        elsif factor1.choice == "sign up" && factor2.choice == "green"
-          (count % 80 == 0) ? test.vote! : nil
-        elsif factor1.choice == "sign up" && factor2.choice == "blue"
-          (count % 60 == 0) ? test.vote! : nil
-        elsif factor1.choice == "join us" && factor2.choice == "red"
-          (count % 50 == 0) ? test.vote! : nil
-        elsif factor1.choice == "join us" && factor2.choice == "green"
-          (count % 40 == 0) ? test.vote! : nil
-        elsif factor1.choice == "join us" && factor2.choice == "blue"
-          (count % 30 == 0) ? test.vote! : nil
-        elsif factor1.choice == "learn more" && factor2.choice == "red"
-          (count % 20 == 0) ? test.vote! : nil
-        elsif factor1.choice == "learn more" && factor2.choice == "green"
-          (count % 5 == 0) ? test.vote! : nil
-        elsif factor1.choice == "learn more" && factor2.choice == "blue"
-          (count % 2 == 0) ? test.vote! : nil
-        end
+      {
+        "land_page.btn_msg:sign up.btn_color:red" => 10,
+        "land_page.btn_msg:sign up.btn_color:green" => 90,
+        "land_page.btn_msg:sign up.btn_color:blue" => 90,
+        "land_page.btn_msg:join us.btn_color:red" => 90,
+        "land_page.btn_msg:join us.btn_color:green" => 90,
+        "land_page.btn_msg:join us.btn_color:blue" => 90,
+        "land_page.btn_msg:learn more.btn_color:red" => 90,
+        "land_page.btn_msg:learn more.btn_color:green" => 90,
+        "land_page.btn_msg:learn more.btn_color:blue" => 90
+      }.each do |key, val|
+        Rightchoice.redis.mapped_hmset(key,
+          available: true, participants_count: 100, votes_count: val)
       end
     end
   end
