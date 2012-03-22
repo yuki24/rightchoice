@@ -11,14 +11,14 @@ describe Rightchoice do
   end
 
   it "works correctly with a Redis::Namespace param" do
-    new_redis = Redis.new(:host => "localhost", :port => 6379)
-    new_namespace = Redis::Namespace.new("namespace", :redis => new_redis)
+    new_redis = Redis.new(host: "localhost", port: 6379)
+    new_namespace = Redis::Namespace.new("namespace", redis: new_redis)
     Rightchoice.redis = new_namespace
     Rightchoice.redis.should == new_namespace
   end
 
   it "works correctly with a Redis param" do
-    new_redis = Redis.new(:host => "localhost", :port => 6379)
+    new_redis = Redis.new(host: "localhost", port: 6379)
     Rightchoice.redis = new_redis
     Rightchoice.redis.class.should == Redis::Namespace
   end

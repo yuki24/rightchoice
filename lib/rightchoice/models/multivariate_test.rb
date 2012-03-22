@@ -47,12 +47,9 @@ module Rightchoice
 
     def save
       store_metadata!
-
       if !redis.exists(redis_key)
         redis.mapped_hmset(redis_key,
-                    :available => @available,
-                    :participants_count => 0,
-                    :votes_count => 0)
+          available: @available, participants_count: 0, votes_count: 0)
       end
     end
 

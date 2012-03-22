@@ -4,8 +4,8 @@ require 'rightchoice/models/multivariate_test'
 describe Rightchoice::MultivariateTest do
   before(:all) { Rightchoice.redis.flushdb }
   let(:test) { Rightchoice::MultivariateTest.find_or_create(:test_name) }
-  let(:factor1) { Rightchoice::Factor.new(:factor1, "foo", "bar", :choice => "foo") }
-  let(:factor2) { Rightchoice::Factor.new(:factor2, "hoge", "fuga", :choice => "hoge") }
+  let(:factor1) { Rightchoice::Factor.new(:factor1, "foo", "bar", choice: "foo") }
+  let(:factor2) { Rightchoice::Factor.new(:factor2, "hoge", "fuga", choice: "hoge") }
 
   describe "initialization" do
     context "default params" do

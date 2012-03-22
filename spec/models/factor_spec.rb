@@ -4,8 +4,8 @@ require 'rightchoice/models/factor'
 describe Rightchoice::Factor do
   describe "initialization" do
     let(:factor) { Rightchoice::Factor.new(:test_name, "foo", "bar") }
-    let(:valid_factor) { Rightchoice::Factor.new(:test_name, "foo", "bar", :choice => "foo") }
-    let(:invalid_factor) { Rightchoice::Factor.new(:test_name, "foo", "bar", :choice => "") }
+    let(:valid_factor) { Rightchoice::Factor.new(:test_name, "foo", "bar", choice: "foo") }
+    let(:invalid_factor) { Rightchoice::Factor.new(:test_name, "foo", "bar", choice: "") }
 
     context 'default params' do
       subject { factor }

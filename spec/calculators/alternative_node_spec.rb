@@ -39,8 +39,8 @@ describe Rightchoice::AlternativeNode do
   describe "statistical numbers" do
     before :all do
       test = Rightchoice::MultivariateTest.find_or_create(:test_name)
-      test.factors << Rightchoice::Factor.new(:factor1, "foo", "bar", :choice => "foo")
-      test.factors << Rightchoice::Factor.new(:factor2, "hoge", "fuga", :choice => "hoge")
+      test.factors << Rightchoice::Factor.new(:factor1, "foo", "bar", choice: "foo")
+      test.factors << Rightchoice::Factor.new(:factor2, "hoge", "fuga", choice: "hoge")
       test.save
       Rightchoice.redis.hset(test.redis_key, "participants_count", 500)
       Rightchoice.redis.hset(test.redis_key, "votes_count", 50)
