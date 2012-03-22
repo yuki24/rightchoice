@@ -25,28 +25,5 @@ describe Rightchoice::Factor do
       its(:alternatives) { should == ["foo", "bar"] }
       its(:choice) { should_not == "" }
     end
-
-=begin
-    describe "#find_or_create" do
-      it "should create a new variation object" do
-        Rightchoice::Factor.find_or_create(:test_name, "foo", "bar")
-        Rightchoice::Factor.redis.hexists("all_tests", "test_name").should be_true
-
-        expect {
-          mv = Rightchoice::Factor.find_or_create(:test_name)
-        }.to change{ Rightchoice::Factor.redis.hlen("all_tests") }.by(0)
-        Rightchoice::Factor.redis.hget("all_tests", "test_name").should ==
-          ["foo", "bar"].to_json
-      end
-
-      it "should create a new multi_variations object" do
-        Rightchoice::Factor.redis.hexists("all_tests", "new_test").should be_false
-        Rightchoice::Factor.find_or_create(:new_test, "foo", "bar")
-        Rightchoice::Factor.redis.hexists("all_tests", "new_test").should be_true
-        Rightchoice::Factor.redis.hget("all_tests", "new_test").should ==
-          ["foo", "bar"].to_json
-      end
-    end
-=end
   end
 end
