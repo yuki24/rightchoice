@@ -105,7 +105,7 @@ describe Rightchoice::ViewHelper do
     end
 
     def fake_voting!
-      300.times do |count|
+      200.times do |count|
         # initialization
         test = Rightchoice::MultivariateTest.find_or_create(:landing_page)
         factor1 = Rightchoice::Factor.new(:button_msg, "sign up", "join us", "learn more")

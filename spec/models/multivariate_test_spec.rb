@@ -86,13 +86,12 @@ describe Rightchoice::MultivariateTest do
       context "listing all MultivariateTest instances" do
         before :all do
           Rightchoice.redis.flushdb
-          (1..100).each do |i|
-            Rightchoice::MultivariateTest.find_or_create("test#{i}")
-          end
+          1.upto(5){|i| Rightchoice::MultivariateTest.find_or_create("test#{i}") }
         end
 
         subject { Rightchoice::MultivariateTest.all }
-        its(:count) { should == 100 }
+        it { should be_a(Array) }
+        its(:count) { should == 5 }
         its(:first) { should be_a(Rightchoice::MultivariateTest) }
       end
     end

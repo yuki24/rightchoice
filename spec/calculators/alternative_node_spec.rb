@@ -42,18 +42,18 @@ describe Rightchoice::AlternativeNode do
       test.factors << Rightchoice::Factor.new(:factor1, "foo", "bar", :choice => "foo")
       test.factors << Rightchoice::Factor.new(:factor2, "hoge", "fuga", :choice => "hoge")
       test.save
-      1000.times { test.participate! }
-      100.times { test.vote! }
+      500.times { test.participate! }
+      50.times { test.vote! }
     end
 
     let(:calc) { Rightchoice::Calculator.new(:test_name) }
 
     context "from calculator" do
       subject { calc.root_node["foo"]["hoge"] }
-      its(:expectation) { should == 100 }
-      its(:dispersion) { should == 90 }
+      its(:expectation) { should == 50 }
+      its(:dispersion) { should == 45.0 }
       its(:probability) { should == 0.1 }
-      its(:confidence_interval) { should == (0.08434672558216652..0.11565327441783349) }
+      its(:confidence_interval) { should == (0.07786292702275209..0.12213707297724792) }
       its(:confident?) { should be_true }
       its(:available?) { should be_true }
     end

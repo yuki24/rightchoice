@@ -3,7 +3,7 @@ require 'rightchoice/calculator'
 
 describe Rightchoice::Calculator do
   before do
-    300.times do |count|
+    200.times do |count|
       # initialization
       test = Rightchoice::MultivariateTest.find_or_create(:test_sample)
       factor1 = Rightchoice::Factor.new(:factor1, "foo", "bar")
