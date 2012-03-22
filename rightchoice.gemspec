@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'json', '~> 1.6.3'
   s.add_dependency 'rubytree', '~> 0.8.2'
 
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'ruby-debug19'
+  s.add_development_dependency 'rspec', '~> 2.9.0'
+  s.add_development_dependency 'simplecov', '~> 0.6.1'
+  s.add_development_dependency 'ruby-debug19', '~> 0.11.6'
 end
