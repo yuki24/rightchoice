@@ -17,45 +17,45 @@ describe Rightchoice::ViewHelper do
 
   describe "selecting variation and voting up" do
     it "should select without block" do
-      alt = select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+      alt = select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
       ["sign up", "join us", "learn more"].should include(alt)
 
-      Rightchoice::Factor.should_not_receive(:new).with(:button_msg, "sign up", "join us", "learn more")
-      alt = select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+      Rightchoice::Factor.should_not_receive(:new).with(:btn_msg, "sign up", "join us", "learn more")
+      alt = select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
       ["sign up", "join us", "learn more"].should include(alt)
     end
 
     it "should select and pass it to the given block" do
-      select_variation(:landing_page, :button_color, "red", "green", "blue") do |alt|
+      select_variation(:land_page, :btn_color, "red", "green", "blue") do |alt|
         ["red", "green", "blue"].should include(alt)
       end
 
-      Rightchoice::Factor.should_not_receive(:new).with(:button_color, "red", "green", "blue")
-      select_variation(:landing_page, :button_color, "red", "green", "blue") do |alt|
+      Rightchoice::Factor.should_not_receive(:new).with(:btn_color, "red", "green", "blue")
+      select_variation(:land_page, :btn_color, "red", "green", "blue") do |alt|
         ["red", "green", "blue"].should include(alt)
       end
     end
 
     it "should select multiple variations" do
-      alt = select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
+      alt = select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
       ["sign up", "join us", "learn more"].should include(alt)
 
-      select_variation(:landing_page, :button_color, "red", "green", "blue") do |alt|
+      select_variation(:land_page, :btn_color, "red", "green", "blue") do |alt|
         ["red", "green", "blue"].should include(alt)
       end
     end
 
     it "should vote up" do
-      select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-      select_variation(:landing_page, :button_color, "red", "green", "blue")
+      select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
+      select_variation(:land_page, :btn_color, "red", "green", "blue")
 
       expect {
-        finish!(:landing_page)
-      }.to change(multivariate_test(:landing_page), :votes_count).by(1)
+        finish!(:land_page)
+      }.to change(multivariate_test(:land_page), :votes_count).by(1)
 
       expect {
-        finish!(:landing_page)
-      }.to change(multivariate_test(:landing_page), :votes_count).by(0)
+        finish!(:land_page)
+      }.to change(multivariate_test(:land_page), :votes_count).by(0)
     end
   end
 
@@ -65,8 +65,8 @@ describe Rightchoice::ViewHelper do
       flush_session!
 
       # 1: suppose 1 user comes to the page and "sign up" and "red" are selected.
-      select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more", :choice => "sign up")
-      select_variation(:landing_page, :button_color, "red", "green", "blue", :choice => "red")
+      select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more", choice: "sign up")
+      select_variation(:land_page, :btn_color, "red", "green", "blue", choice: "red")
     end
 
     it "should return false if there is no tests" do
@@ -74,33 +74,33 @@ describe Rightchoice::ViewHelper do
     end
 
     it "should check if the combination of the multivariate test is available or not" do
-      available?(:landing_page).should be_true
+      available?(:land_page).should be_true
 
       # 2: then the calculation runs.
       fake_voting!
-      Rightchoice::Calculator.new(:landing_page).disable_ineffective_nodes!
+      Rightchoice::Calculator.new(:land_page).disable_ineffective_nodes!
 
       # 3: after that, the combination should not be available.
-      available?(:landing_page).should be_false
+      available?(:land_page).should be_false
     end
 
     it "should reselect the combination" do
       # 2-3: same as above
       fake_voting!
       participate!
-      Rightchoice::Calculator.new(:landing_page).disable_ineffective_nodes!
-      available?(:landing_page).should be_false
+      Rightchoice::Calculator.new(:land_page).disable_ineffective_nodes!
+      available?(:land_page).should be_false
 
       # 4: select the combination over.
-      reselect!(:landing_page)
-      multivariate_test(:landing_page).available?.should be_true
-      multivariate_test(:landing_page).already_participated?.should be_false
-      multivariate_test(:landing_page).already_voted?.should be_false
+      reselect!(:land_page)
+      multivariate_test(:land_page).available?.should be_true
+      multivariate_test(:land_page).already_participated?.should be_false
+      multivariate_test(:land_page).already_voted?.should be_false
 
       # then make sure the new combination is not the same as before.
       alt = []
-      alt << select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-      alt << select_variation(:landing_page, :button_color, "red", "green", "blue")
+      alt << select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
+      alt << select_variation(:land_page, :btn_color, "red", "green", "blue")
       alt.should_not == ["sign up", "red"]
     end
 
@@ -133,49 +133,49 @@ describe Rightchoice::ViewHelper do
     describe "before filter #check_availability" do
       it "should not do anything if there is no test" do
         self.should_receive(:multivariate_tests).and_return({})
-        self.should_not_receive(:available?).with(:landing_page)
+        self.should_not_receive(:available?).with(:land_page)
         self.should_not_receive(:reselect!)
         check_availability!
       end
 
       it "should check the availability but not reselect" do
-        select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-        select_variation(:landing_page, :button_color, "red", "green", "blue")
+        select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
+        select_variation(:land_page, :btn_color, "red", "green", "blue")
 
-        self.should_receive(:available?).with(:landing_page).and_return(true)
+        self.should_receive(:available?).with(:land_page).and_return(true)
         self.should_not_receive(:reselect!)
         check_availability!
       end
 
       it "should reselect another combination" do
-        select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-        select_variation(:landing_page, :button_color, "red", "green", "blue")
+        select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
+        select_variation(:land_page, :btn_color, "red", "green", "blue")
 
-        self.should_receive(:available?).with(:landing_page).and_return(false)
-        self.should_receive(:reselect!).with(:landing_page)
+        self.should_receive(:available?).with(:land_page).and_return(false)
+        self.should_receive(:reselect!).with(:land_page)
         check_availability!
       end
     end
 
     describe "after filter #participate!" do
       it "should add a participant" do
-        select_variation(:landing_page, :button_msg, "sign up", "join us", "learn more")
-        select_variation(:landing_page, :button_color, "red", "green", "blue")
+        select_variation(:land_page, :btn_msg, "sign up", "join us", "learn more")
+        select_variation(:land_page, :btn_color, "red", "green", "blue")
 
         expect {
           participate!
-        }.to change(multivariate_test(:landing_page), :participants_count).by(1)
+        }.to change(multivariate_test(:land_page), :participants_count).by(1)
 
         expect {
           participate!
-        }.to change(multivariate_test(:landing_page), :participants_count).by(0)
+        }.to change(multivariate_test(:land_page), :participants_count).by(0)
       end
 
       it "should not add participants when there is no multivariate test" do
         session[:_rightchoice_testname] = nil
         expect {
           participate!
-        }.to change(multivariate_test(:landing_page), :participants_count).by(0)
+        }.to change(multivariate_test(:land_page), :participants_count).by(0)
       end
 
       it "should start calculating when the number of participants hits 100" do
@@ -183,7 +183,7 @@ describe Rightchoice::ViewHelper do
 
         200.times do
           @_session = {}
-          select_variation(:test_page, :button_msg, "sign up", "join us")
+          select_variation(:test_page, :btn_msg, "sign up", "join us")
           participate!
         end
       end
